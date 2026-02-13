@@ -13,6 +13,10 @@ public class JobService {
 
     private JobRepository jobRepository;
 
+
+    public Job createJob(Job job){
+        return jobRepository.save(job);
+    }
     public List<Job> getJobRecruiter(int id){
         return jobRepository.findByRecruiterId(id);
     }

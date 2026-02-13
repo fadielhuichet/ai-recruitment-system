@@ -3,7 +3,10 @@ package com.fedicode.intelligentrecruitments.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.CurrentTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -29,6 +32,10 @@ public class Recruiter {
     private String lastName;
     @Column(nullable = false)
     private String phone;
+
+    @CreationTimestamp
+    @Column(name ="created_at" , updatable = false)
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "recruiter")
     private List<Job> jobs;

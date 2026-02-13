@@ -13,5 +13,4 @@ public interface JobRepository extends JpaRepository<Job,Integer> {
 
 
 
-
 }
