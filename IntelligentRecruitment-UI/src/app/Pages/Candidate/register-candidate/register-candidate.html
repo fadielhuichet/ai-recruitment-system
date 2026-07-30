@@ -1,0 +1,298 @@
+<app-header></app-header>
+
+<div class="flex min-h-[calc(100vh-5rem)] items-center justify-center py-12 px-4 bg-gray-50">
+
+  <div class="w-full max-w-[640px]">
+
+    <!-- Card -->
+    <div class="bg-white rounded-[24px] p-8 sm:p-10"
+         style="box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 4px 6px rgba(0,0,0,.04), 0 20px 40px rgba(15,118,110,.08);">
+
+      <form #registerForm="ngForm" (ngSubmit)="onRegister(registerForm)" novalidate>
+
+        <!-- ── HEADER ─────────────────────────────────────────── -->
+        <div class="text-center mb-8">
+          <div class="mx-auto w-[52px] h-[52px] rounded-2xl flex items-center justify-center mb-5"
+               style="background:#f0fdfa; border:1.5px solid rgba(15,118,110,.18);">
+            <i class="fa-solid fa-user-graduate text-[#0f766e] text-xl"></i>
+          </div>
+          <h2 class="text-[1.5rem] font-bold text-gray-900 tracking-tight">Candidate Registration</h2>
+          <p class="mt-1 text-sm text-gray-500">Create your profile to apply for top opportunities.</p>
+          <div class="flex gap-1.5 justify-center mt-5">
+            <span class="h-[5px] w-7 rounded-full bg-teal-400"></span>
+            <span class="h-[5px] w-7 rounded-full bg-teal-600"></span>
+            <span class="h-[5px] w-7 rounded-full bg-gray-200"></span>
+          </div>
+        </div>
+
+        <!-- ── PERSONAL INFORMATION ───────────────────────────── -->
+        <p class="text-[0.7rem] font-semibold tracking-[.08em] uppercase text-[#0f766e]
+                   border-b border-teal-100 pb-1.5 mb-4">Personal Information</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+          <!-- First Name -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[.8rem] font-semibold text-gray-800">First Name</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                <i class="fa-regular fa-user text-[13px]"></i>
+              </span>
+              <input name="firstName" ngModel required #firstName="ngModel"
+                     [(ngModel)]="registerRequest.firstName" type="text" placeholder="First name"
+                     class="w-full rounded-[10px] border border-gray-200 pl-9 pr-3 py-[.65rem]
+                       text-sm outline-none transition-all focus:border-[#0f766e] focus:ring-2 focus:ring-[#0f766e]/20"
+                     [ngClass]="{'border-red-400': firstName.touched && firstName.invalid, 'border-emerald-500': firstName.touched && firstName.valid}" />
+            </div>
+            <span *ngIf="firstName.touched && firstName.invalid" class="text-red-500 text-[.72rem] pl-0.5">*Required</span>
+          </div>
+
+          <!-- Last Name -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[.8rem] font-semibold text-gray-800">Last Name</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                <i class="fa-regular fa-user text-[13px]"></i>
+              </span>
+              <input name="lastName" ngModel required #lastName="ngModel"
+                     [(ngModel)]="registerRequest.lastName" type="text" placeholder="Last name"
+                     class="w-full rounded-[10px] border border-gray-200 pl-9 pr-3 py-[.65rem]
+                       text-sm outline-none transition-all focus:border-[#0f766e] focus:ring-2 focus:ring-[#0f766e]/20"
+                     [ngClass]="{'border-red-400': lastName.touched && lastName.invalid, 'border-emerald-500': lastName.touched && lastName.valid}" />
+            </div>
+            <span *ngIf="lastName.touched && lastName.invalid" class="text-red-500 text-[.72rem] pl-0.5">*Required</span>
+          </div>
+
+          <!-- Email -->
+          <div class="flex flex-col gap-1.5 sm:col-span-2">
+            <label class="text-[.8rem] font-semibold text-gray-800">Email Address</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                <i class="fa-regular fa-envelope text-[13px]"></i>
+              </span>
+              <input name="email" ngModel required email #email="ngModel"
+                     [(ngModel)]="registerRequest.email" type="email" placeholder="you@example.com"
+                     class="w-full rounded-[10px] border border-gray-200 pl-9 pr-3 py-[.65rem]
+                       text-sm outline-none transition-all focus:border-[#0f766e] focus:ring-2 focus:ring-[#0f766e]/20"
+                     [ngClass]="{'border-red-400': email.touched && email.invalid, 'border-emerald-500': email.touched && email.valid}" />
+            </div>
+            <div *ngIf="email.touched && email.invalid" class="text-red-500 text-[.72rem] pl-0.5">
+              <span *ngIf="email.errors?.['required']">*Required</span>
+              <span *ngIf="email.errors?.['email']">*Invalid email format</span>
+            </div>
+            <span *ngIf="msg" class="text-red-500 text-[.72rem] pl-0.5">{{ msg }}</span>
+          </div>
+
+        </div>
+
+        <!-- ── SECURITY ────────────────────────────────────────── -->
+        <p class="text-[0.7rem] font-semibold tracking-[.08em] uppercase text-[#0f766e]
+                   border-b border-teal-100 pb-1.5 mb-4 mt-6">Security</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+          <!-- Password -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[.8rem] font-semibold text-gray-800">Password</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                <i class="fa-solid fa-lock text-[13px]"></i>
+              </span>
+              <input name="password" ngModel required minlength="8" #password="ngModel"
+                     [(ngModel)]="registerRequest.password" type="password" placeholder="Min. 8 characters"
+                     class="w-full rounded-[10px] border border-gray-200 pl-9 pr-3 py-[.65rem]
+                       text-sm outline-none transition-all focus:border-[#0f766e] focus:ring-2 focus:ring-[#0f766e]/20"
+                     [ngClass]="{'border-red-400': password.touched && password.invalid, 'border-emerald-500': password.touched && password.valid}" />
+            </div>
+            <div *ngIf="password.touched && password.invalid" class="text-red-500 text-[.72rem] pl-0.5">
+              <span *ngIf="password.errors?.['required']">*Required</span>
+              <span *ngIf="password.errors?.['minlength']">*Min. 8 characters</span>
+            </div>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[.8rem] font-semibold text-gray-800">Confirm Password</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                <i class="fa-solid fa-lock text-[13px]"></i>
+              </span>
+              <input name="confirmPassword" ngModel required minlength="8"
+                     #confirmPasswordModel="ngModel" [(ngModel)]="confirmPassword"
+                     type="password" placeholder="Repeat password"
+                     class="w-full rounded-[10px] border border-gray-200 pl-9 pr-3 py-[.65rem]
+                       text-sm outline-none transition-all focus:border-[#0f766e] focus:ring-2 focus:ring-[#0f766e]/20"
+                     [ngClass]="{
+                  'border-red-400': (confirmPasswordModel.touched && confirmPasswordModel.invalid) || (confirmPasswordModel.touched && registerRequest.password !== confirmPassword),
+                  'border-emerald-500': confirmPasswordModel.touched && confirmPasswordModel.valid && registerRequest.password === confirmPassword
+                }" />
+            </div>
+            <div *ngIf="confirmPasswordModel.touched && (confirmPasswordModel.invalid || registerRequest.password !== confirmPassword)"
+                 class="text-red-500 text-[.72rem] pl-0.5">
+              <span *ngIf="confirmPasswordModel.errors?.['required']">*Required</span>
+              <span *ngIf="!confirmPasswordModel.errors?.['required'] && registerRequest.password !== confirmPassword">*Passwords do not match</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ── CONTACT DETAILS ────────────────────────────────── -->
+        <p class="text-[0.7rem] font-semibold tracking-[.08em] uppercase text-[#0f766e]
+                   border-b border-teal-100 pb-1.5 mb-4 mt-6">Contact Details</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+          <!-- Phone -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[.8rem] font-semibold text-gray-800">Phone Number</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                <i class="fa-solid fa-phone text-[13px]"></i>
+              </span>
+              <input name="phone" ngModel required pattern="^[0-9+ ]{8,15}$" #phone="ngModel"
+                     [(ngModel)]="registerRequest.phone" type="tel" placeholder="+1 555 000 0000"
+                     class="w-full rounded-[10px] border border-gray-200 pl-9 pr-3 py-[.65rem]
+                       text-sm outline-none transition-all focus:border-[#0f766e] focus:ring-2 focus:ring-[#0f766e]/20"
+                     [ngClass]="{'border-red-400': phone.touched && phone.invalid, 'border-emerald-500': phone.touched && phone.valid}" />
+            </div>
+            <div *ngIf="phone.touched && phone.invalid" class="text-red-500 text-[.72rem] pl-0.5">
+              <span *ngIf="phone.errors?.['required']">*Required</span>
+              <span *ngIf="phone.errors?.['pattern']">*Invalid phone number</span>
+            </div>
+          </div>
+
+          <!-- Date of Birth -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[.8rem] font-semibold text-gray-800">Date of Birth</label>
+            <input name="dateOfBirth" ngModel required #dateOfBirth="ngModel"
+                   [(ngModel)]="registerRequest.dateOfBirth" type="date"
+                   class="w-full rounded-[10px] border border-gray-200 px-3 py-[.65rem]
+                     text-sm outline-none transition-all focus:border-[#0f766e] focus:ring-2 focus:ring-[#0f766e]/20"
+                   [ngClass]="{'border-red-400': dateOfBirth.touched && dateOfBirth.invalid, 'border-emerald-500': dateOfBirth.touched && dateOfBirth.valid}" />
+            <span *ngIf="dateOfBirth.touched && dateOfBirth.invalid"
+                  class="text-red-500 text-[.72rem] pl-0.5">*Required</span>
+          </div>
+
+          <!-- Country -->
+          <div class="flex flex-col gap-1.5 sm:col-span-2">
+            <label class="text-[.8rem] font-semibold text-gray-800">Country</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                <i class="fa-solid fa-globe text-[13px]"></i>
+              </span>
+              <select name="country" ngModel required #country="ngModel"
+                      [(ngModel)]="registerRequest.country"
+                      class="w-full appearance-none rounded-[10px] border border-gray-200
+                       pl-9 pr-9 py-[.65rem] text-sm bg-white outline-none cursor-pointer
+                       transition-all focus:border-[#0f766e] focus:ring-2 focus:ring-[#0f766e]/20"
+                      [ngClass]="{'border-red-400': country.invalid && country.touched, 'border-emerald-500': country.valid && country.touched}">
+                <option value="" disabled>Select your country</option>
+                <option *ngFor="let c of COUNTRIES" [value]="c">{{ c }}</option>
+              </select>
+              <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                <i class="fa-solid fa-chevron-down text-[11px]"></i>
+              </span>
+            </div>
+            <span *ngIf="country.invalid && (country.touched || registerForm.submitted)"
+                  class="text-red-500 text-[.72rem] pl-0.5">*Country is required</span>
+          </div>
+
+        </div>
+
+        <!-- ── RESUME / CV ─────────────────────────────────────── -->
+        <p class="text-[0.7rem] font-semibold tracking-[.08em] uppercase text-[#0f766e]
+                   border-b border-teal-100 pb-1.5 mb-4 mt-6">Resume / CV</p>
+
+        <div class="flex flex-col gap-1.5">
+
+          <!-- Hidden native file input -->
+          <input
+            #cvInput
+            type="file"
+            accept=".pdf,.doc,.docx"
+            class="hidden"
+            (change)="onCvSelected($event)"
+          />
+
+          <!-- Drop zone — shown when no file is selected -->
+          <div
+            *ngIf="!registerRequest.cv"
+            (click)="cvInput.click()"
+            (dragover)="$event.preventDefault()"
+            (drop)="onCvDrop($event)"
+            [ngClass]="{'border-[#0f766e] bg-[#f0fdfa]': cvDragOver, 'border-red-400': cvTouched && !registerRequest.cv}"
+            class="flex flex-col items-center gap-2 rounded-[12px] border-[1.5px] border-dashed
+                   border-gray-200 bg-gray-50 px-6 py-7 cursor-pointer transition-all
+                   hover:border-[#0f766e] hover:bg-[#f0fdfa]"
+            (dragenter)="cvDragOver = true"
+            (dragleave)="cvDragOver = false"
+          >
+            <div class="w-11 h-11 rounded-xl bg-[#f0fdfa] flex items-center justify-center text-[#0f766e]">
+              <i class="fa-solid fa-arrow-up-from-bracket text-lg"></i>
+            </div>
+            <p class="text-sm font-semibold text-gray-800">
+              <span class="text-[#0f766e]">Click to upload</span> or drag &amp; drop
+            </p>
+            <p class="text-[.75rem] text-gray-400">PDF, DOC, DOCX — max 5 MB</p>
+          </div>
+
+          <!-- File pill — shown once a file is selected -->
+          <div
+            *ngIf="registerRequest.cv"
+            class="flex items-center gap-3 rounded-[12px] border-[1.5px] border-emerald-400
+                   bg-emerald-50 px-4 py-3"
+          >
+            <!-- File icon -->
+            <div class="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
+              <i class="fa-solid fa-file-lines text-sm"></i>
+            </div>
+
+            <!-- File info -->
+            <div class="flex-1 min-w-0">
+              <p class="text-[.82rem] font-semibold text-gray-800 truncate">{{ registerRequest.cv.name }}</p>
+              <p class="text-[.72rem] text-gray-500">{{ (registerRequest.cv.size / 1024).toFixed(0) }} KB · {{ registerRequest.cv.name.split('.').pop()?.toUpperCase() }}</p>
+            </div>
+
+            <!-- Remove button -->
+            <button
+              type="button"
+              (click)="removeCV()"
+              class="w-7 h-7 rounded-full flex items-center justify-center text-gray-400
+                     hover:bg-red-100 hover:text-red-500 transition-colors border-none bg-transparent cursor-pointer"
+              title="Remove file"
+            >
+              <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+          </div>
+
+          <!-- Validation hint -->
+          <span *ngIf="cvTouched && !registerRequest.cv"
+                class="text-red-500 text-[.72rem] pl-0.5">*CV is required</span>
+
+        </div>
+
+        <!-- ── ACTIONS ─────────────────────────────────────────── -->
+        <div class="mt-8 space-y-4">
+          <button
+            type="submit"
+            [disabled]="registerForm.invalid || registerRequest.password !== confirmPassword || !registerRequest.cv"
+            class="w-full rounded-[10px] bg-[#0f766e] py-[.9rem] text-[.95rem] font-bold
+                   text-white transition-all hover:bg-[#0c5c56] active:scale-[.99]
+                   disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span *ngIf="!creating">Create Account</span>
+            <span *ngIf="creating">
+              <i class="fa-solid fa-circle-notch fa-spin mr-1.5"></i>Creating…
+            </span>
+          </button>
+
+          <p class="text-center text-sm text-gray-500">
+            Already have an account?
+            <a routerLink="/login" class="font-bold text-[#0f766e] hover:underline cursor-pointer">Sign in</a>
+          </p>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

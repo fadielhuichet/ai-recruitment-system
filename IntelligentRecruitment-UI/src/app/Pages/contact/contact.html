@@ -1,0 +1,135 @@
+<app-header></app-header>
+
+<div class="bg-slate-50 min-h-screen pb-20 font-sans text-slate-800 antialiased">
+
+  <!-- Success Toast -->
+  <div *ngIf="submitSuccess"
+       class="fixed top-20 right-6 z-[60] bg-white border border-emerald-100 shadow-xl rounded-xl px-4 py-3 flex items-start gap-3 max-w-sm animate-in fade-in slide-in-from-top-4 duration-300">
+    <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+      <i class="fa-solid fa-circle-check text-sm"></i>
+    </div>
+    <div>
+      <p class="text-[13.5px] font-semibold text-slate-900 tracking-tight">Message sent</p>
+      <p class="text-[12px] text-slate-500 mt-0.5">We have received your request and will respond shortly.</p>
+    </div>
+  </div>
+
+  <!-- Error Toast -->
+  <div *ngIf="submitError"
+       class="fixed top-20 right-6 z-[60] bg-white border border-rose-100 shadow-xl rounded-xl px-4 py-3 flex items-start gap-3 max-w-sm animate-in fade-in slide-in-from-top-4 duration-300">
+    <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+      <i class="fa-solid fa-circle-exclamation text-sm"></i>
+    </div>
+    <div>
+      <p class="text-[13.5px] font-semibold text-slate-900 tracking-tight">Failed to send</p>
+      <p class="text-[12px] text-slate-500 mt-0.5">{{ errorMsg || 'Please try again later.' }}</p>
+    </div>
+  </div>
+
+  <div class="max-w-5xl mx-auto px-6 pt-12">
+
+    <!-- Hero Header Header Section -->
+    <div class="bg-white rounded-2xl p-8 mb-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] relative overflow-hidden">
+      <div class="max-w-2xl">
+        <span class="text-xs font-bold text-[#0f766e] uppercase tracking-widest block mb-2.5">Contact Support</span>
+        <h1 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight mb-3">
+          How can we help you?
+        </h1>
+        <p class="text-sm text-slate-500 leading-relaxed font-medium">
+          Have questions about RecruWise? Whether you are a candidate navigating options or a recruiter scaling operations, our team is standing by to assist.
+        </p>
+      </div>
+    </div>
+
+    <!-- Main Layout Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
+
+      <!-- Left Column: Premium Borderless Contact Form -->
+      <div class="lg:col-span-2 bg-white rounded-2xl p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
+        <h2 class="text-xs font-bold text-slate-400 mb-6 uppercase tracking-widest">
+          Send us a message
+        </h2>
+
+        <form (ngSubmit)="onSendMessage()" class="space-y-5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <!-- Full Name -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Full Name</label>
+              <input type="text" required name="firstName"
+                       [(ngModel)]="contactRequest.firstName"
+                       class="w-full px-4 py-3 bg-slate-50 border border-slate-200/80 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#0f766e] focus:ring-4 focus:ring-[#0f766e]/5 transition-all"
+                       placeholder="Full name">
+            </div>
+
+            <!-- Email Address -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Email Address</label>
+              <input type="email" required name="email"
+                       [(ngModel)]="contactRequest.email"
+                       class="w-full px-4 py-3 bg-slate-50 border border-slate-200/80 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#0f766e] focus:ring-4 focus:ring-[#0f766e]/5 transition-all"
+                       placeholder="Email">
+            </div>
+          </div>
+
+          <!-- Subject -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Subject</label>
+            <input type="text" required name="subject"
+                     [(ngModel)]="contactRequest.subject"
+                     class="w-full px-4 py-3 bg-slate-50 border border-slate-200/80 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#0f766e] focus:ring-4 focus:ring-[#0f766e]/5 transition-all"
+                     placeholder="How can we assist you?">
+          </div>
+
+          <!-- Message -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Message</label>
+            <textarea rows="5" required name="message"
+                        [(ngModel)]="contactRequest.message"
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200/80 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#0f766e] focus:ring-4 focus:ring-[#0f766e]/5 transition-all resize-none leading-relaxed"
+                        placeholder="Provide detailed information regarding your inquiry..."></textarea>
+          </div>
+
+          <!-- Action Button -->
+          <div class="pt-2">
+            <button type="submit" [disabled]="loading"
+                    class="px-6 py-3.5 bg-[#0f766e] hover:bg-[#0d6460] text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer border-none shadow-sm disabled:opacity-40 disabled:cursor-not-allowed text-sm tracking-wide">
+              <span *ngIf="!loading">Submit Inquiry</span>
+              <div *ngIf="loading" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              <i *ngIf="!loading" class="fa-solid fa-paper-plane text-[11px]"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Right Column: Corporate Sidebar Details -->
+      <div class="lg:col-span-1 flex flex-col gap-6">
+
+        <!-- Quick Info Overview Card -->
+        <div class="bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
+          <div class="px-6 py-4 border-b border-slate-100">
+            <h3 class="font-bold text-slate-400 text-xs uppercase tracking-widest">Corporate Office</h3>
+          </div>
+
+          <div class="p-6 space-y-5">
+            <!-- Row 1: Email -->
+            <div class="flex items-start gap-3.5 text-sm">
+              <div class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 shrink-0">
+                <i class="fa-regular fa-envelope text-sm"></i>
+              </div>
+              <div class="min-w-0">
+                <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">Corporate Email</span>
+                <a href="mailto:recruwise@gmail.com" class="font-semibold text-slate-800 hover:text-[#0f766e] transition-colors break-all">
+                  recruwise&#64;gmail.com
+                </a>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>

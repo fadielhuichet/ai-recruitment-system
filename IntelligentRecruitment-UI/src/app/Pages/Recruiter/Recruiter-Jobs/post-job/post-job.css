@@ -1,0 +1,58 @@
+/* Quill container matches your form inputs */
+.quill-recruwise .ql-toolbar {
+  border: 1px solid #cbd5e1;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  background: #f8fafc;
+  padding: 6px 8px;
+}
+
+.quill-recruwise .ql-container {
+  border: 1px solid #cbd5e1;
+  border-radius: 0 0 8px 8px;
+  background: #f8fafc;
+  font-size: 13px;
+  font-family: inherit;
+  min-height: 200px;
+}
+
+.quill-recruwise .ql-editor {
+  min-height: 200px;
+  line-height: 1.7;
+  color: #1e293b;
+  padding: 10px 12px;
+}
+
+.quill-recruwise .ql-editor:focus {
+  background: #fff;
+}
+
+/* Section title (H2) styled with teal underline */
+.quill-recruwise .ql-editor h2 {
+  font-size: 14px !important;
+  font-weight: 700;
+  color: #1e293b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1.5px solid #0f766e;
+  padding-bottom: 5px;
+  margin: 18px 0 8px;
+}
+
+/* Error state */
+.quill-error .ql-toolbar,
+.quill-error .ql-container {
+  border-color: #f87171 !important;
+}
+
+/* Focus ring matching your other inputs */
+.quill-recruwise .ql-container:focus-within {
+  border-color: #0f766e;
+  box-shadow: 0 0 0 1px #0f766e;
+  background: #fff;
+}
+
+/* Toolbar button labels */
+.quill-recruwise .ql-toolbar .ql-header .ql-picker-label[data-value="2"]::before {
+  content: 'Title';
+}

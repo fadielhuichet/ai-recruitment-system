@@ -1,0 +1,50 @@
+/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+
+
+
+
+.rte-heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.rte-paragraph {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #334155;
+}
+
+.job-description p {
+  margin: 1rem 0;
+  line-height: 1.6;
+}
+
+.job-description h2,
+.job-description .rte-heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.job-description ul {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+  list-style-type: disc;
+}
+
+.job-description li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.job-description strong {
+  font-weight: 600;
+  color: #0f172a;
+}

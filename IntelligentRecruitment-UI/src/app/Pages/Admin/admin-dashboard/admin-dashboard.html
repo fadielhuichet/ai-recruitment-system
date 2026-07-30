@@ -1,0 +1,234 @@
+<!-- Wrapper to resolve observables cleanly -->
+<ng-container *ngIf="{
+  recruiter: recruiterStats,
+  job: jobStats$ | async,
+  app: applicationStats,
+  candidate:candidateStats
+} as stats">
+
+  <div class="space-y-6 pb-10">
+
+    <!-- PAGE HEADER -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Platform Overview</h1>
+        <p class="text-sm text-slate-500 mt-1">High-level metrics and system statistics across the entire platform.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button (click)="refresh()" class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-[13px] font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition-all flex items-center gap-2 cursor-pointer">
+          <i class="fa-solid fa-rotate-right text-slate-400"></i> Refresh Data
+        </button>
+      </div>
+    </div>
+
+    <!-- PRIMARY KPIs -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+
+      <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xl shrink-0">
+          <i class="fa-solid fa-users-gear"></i>
+        </div>
+        <div>
+          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Recruiters</p>
+          <p class="text-2xl font-black text-slate-800 mt-0.5">{{ stats.recruiter?.total || 0 }}</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center text-xl shrink-0">
+          <i class="fa-solid fa-users"></i>
+        </div>
+        <div>
+          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Candidates</p>
+          <p class="text-2xl font-black text-slate-800 mt-0.5">{{ stats.candidate?.total || 0 }}</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 rounded-lg bg-teal-50 text-[#0f766e] flex items-center justify-center text-xl shrink-0">
+          <i class="fa-solid fa-briefcase"></i>
+        </div>
+        <div>
+          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Jobs</p>
+          <p class="text-2xl font-black text-slate-800 mt-0.5">{{ stats.job?.total || 0 }}</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl shrink-0">
+          <i class="fa-solid fa-file-lines"></i>
+        </div>
+        <div>
+          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Applications</p>
+          <p class="text-2xl font-black text-slate-800 mt-0.5">{{ stats.app?.totalApplications || 0 }}</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center text-xl shrink-0">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+        <div class="flex-1">
+          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Avg. AI Score</p>
+          <p class="text-2xl font-black text-slate-800 mt-0.5">
+            {{ stats.app?.averageScore || 0 }}<span class="text-sm text-slate-400">%</span>
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- APPLICATION PIPELINE -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+        <h3 class="text-[14px] font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-chart-column text-[#0f766e]"></i> Application Pipeline
+        </h3>
+      </div>
+      <div class="p-6 grid grid-cols-1 md:grid-cols-4 gap-6">
+
+        <div class="flex flex-col border-l-4 border-amber-400 pl-4 py-1">
+          <span class="text-[12px] font-bold text-slate-500 uppercase tracking-wider">Pending</span>
+          <span class="text-3xl font-black text-slate-800 mt-1">{{ stats.app?.pendingApplications || 0 }}</span>
+        </div>
+
+        <div class="flex flex-col border-l-4 border-cyan-400 pl-4 py-1">
+          <span class="text-[12px] font-bold text-slate-500 uppercase tracking-wider">AI Analyzed</span>
+          <span class="text-3xl font-black text-slate-800 mt-1">{{ stats.app?.analyzedApplications || 0 }}</span>
+        </div>
+
+        <div class="flex flex-col border-l-4 border-emerald-500 pl-4 py-1">
+          <span class="text-[12px] font-bold text-slate-500 uppercase tracking-wider">Accepted</span>
+          <div class="flex items-end gap-2 mt-1">
+            <span class="text-3xl font-black text-slate-800">{{ stats.app?.acceptedApplications || 0 }}</span>
+            <span class="text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md mb-1">
+              +{{ stats.app?.acceptedThisMonth || 0 }} this month
+            </span>
+          </div>
+        </div>
+
+        <div class="flex flex-col border-l-4 border-rose-500 pl-4 py-1">
+          <span class="text-[12px] font-bold text-slate-500 uppercase tracking-wider">Refused</span>
+          <div class="flex items-end gap-2 mt-1">
+            <span class="text-3xl font-black text-slate-800">{{ stats.app?.refusedApplications || 0 }}</span>
+            <span class="text-[11px] font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md mb-1">
+              +{{ stats.app?.refusedThisMonth || 0 }} this month
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CHARTS — 2 equal columns, both properly wrapped -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+          <h3 class="text-[14px] font-bold text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-chart-area text-[#0f766e]"></i> Applications Per Month
+          </h3>
+        </div>
+        <div class="p-6 flex-1 min-h-[250px]">
+          <canvas id="monthlyChart"></canvas>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+          <h3 class="text-[14px] font-bold text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-chart-area text-[#0f766e]"></i> Recruiters Per Month
+          </h3>
+        </div>
+        <div class="p-6 flex-1 min-h-[250px]">
+          <canvas id="monthlyChartRecruiter"></canvas>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+          <h3 class="text-[14px] font-bold text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-chart-area text-[#0f766e]"></i> Candidates Per Month
+          </h3>
+        </div>
+        <div class="p-6 flex-1 min-h-[250px]">
+          <canvas id="monthlyChartCandidate"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ENTITIES BREAKDOWN -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Recruiters Breakdown -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+          <h3 class="text-[14px] font-bold text-slate-800">Recruiters Overview</h3>
+          <span class="text-[11px] font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md">
+            +{{ stats.recruiter?.thisMonth || 0 }} joined this month
+          </span>
+        </div>
+        <div class="p-6 space-y-4 flex-1">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+                <i class="fa-solid fa-check"></i>
+              </div>
+              <span class="text-[13px] font-semibold text-slate-700">Active Accounts</span>
+            </div>
+            <span class="text-lg font-bold text-slate-900">{{ stats.recruiter?.active || 0 }}</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
+                <i class="fa-solid fa-ban"></i>
+              </div>
+              <span class="text-[13px] font-semibold text-slate-700">Suspended Accounts</span>
+            </div>
+            <span class="text-lg font-bold text-slate-900">{{ stats.recruiter?.suspended || 0 }}</span>
+          </div>
+        </div>
+        <div class="px-6 pb-6">
+          <button routerLink="/admin/recruiters" class="w-full py-2.5 rounded-lg border border-slate-200 text-[13px] font-bold text-slate-600 hover:bg-slate-50 hover:text-[#0f766e] hover:border-[#0f766e] transition-all cursor-pointer">
+            Manage Recruiters
+          </button>
+        </div>
+      </div>
+
+      <!-- Jobs Breakdown -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+          <h3 class="text-[14px] font-bold text-slate-800">Jobs Overview</h3>
+          <span class="text-[11px] font-semibold text-[#0f766e] bg-teal-50 px-2.5 py-1 rounded-md">
+            +{{ stats.job?.thisMonth || 0 }} posted this month
+          </span>
+        </div>
+        <div class="p-6 space-y-4 flex-1">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+                <i class="fa-regular fa-circle-play"></i>
+              </div>
+              <span class="text-[13px] font-semibold text-slate-700">Active Postings</span>
+            </div>
+            <span class="text-lg font-bold text-slate-900">{{ stats.job?.active || 0 }}</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                <i class="fa-solid fa-box-archive"></i>
+              </div>
+              <span class="text-[13px] font-semibold text-slate-700">Closed Postings</span>
+            </div>
+            <span class="text-lg font-bold text-slate-900">{{ stats.job?.closed || 0 }}</span>
+          </div>
+        </div>
+        <div class="px-6 pb-6">
+          <button routerLink="/admin/admin-jobs" class="w-full py-2.5 rounded-lg border border-slate-200 text-[13px] font-bold text-slate-600 hover:bg-slate-50 hover:text-[#0f766e] hover:border-[#0f766e] transition-all cursor-pointer">
+            Manage Jobs
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</ng-container>

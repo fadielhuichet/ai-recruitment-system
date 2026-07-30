@@ -1,0 +1,250 @@
+<!-- Main Layout Wrapper -->
+<div class="flex flex-col min-h-screen bg-slate-50 text-slate-800 font-sans">
+
+  <!-- ══════════════════════════════════════════
+       TOP BAR
+  ══════════════════════════════════════════ -->
+  <div class="shrink-0 px-8 pt-7 pb-5 space-y-6">
+
+    <!-- Title row -->
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[11px] font-bold tracking-[0.15em] text-[#0f766e] uppercase mb-1">Platform Overview</p>
+        <h1 class="text-[28px] font-black text-slate-900 tracking-tight leading-none">Candidates</h1>
+      </div>
+      <!-- Optional action button -->
+      <!--
+      <button class="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[12.5px] font-semibold text-slate-600 hover:border-slate-300 hover:shadow-sm transition-all cursor-pointer">
+        <i class="fa-solid fa-file-export text-slate-400 text-[11px]"></i> Export CSV
+      </button>
+      -->
+    </div>
+
+    <!-- Stats -->
+    <div *ngIf="stats$ | async as stats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+
+      <div class="bg-white rounded-2xl border border-slate-100 px-5 py-4 shadow-sm flex items-center gap-4">
+        <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-users text-slate-500 text-[14px]"></i>
+        </div>
+        <div>
+          <p class="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider">Total</p>
+          <p class="text-[22px] font-black text-slate-900 leading-none mt-0.5">{{ stats.total }}</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-100 px-5 py-4 shadow-sm flex items-center gap-4">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-circle-check text-emerald-500 text-[14px]"></i>
+        </div>
+        <div>
+          <p class="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider">Active</p>
+          <p class="text-[22px] font-black text-emerald-600 leading-none mt-0.5">{{ stats.active }}</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-100 px-5 py-4 shadow-sm flex items-center gap-4">
+        <div class="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-ban text-rose-500 text-[14px]"></i>
+        </div>
+        <div>
+          <p class="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider">Suspended</p>
+          <p class="text-[22px] font-black text-rose-600 leading-none mt-0.5">{{ stats.suspended }}</p>
+        </div>
+      </div>
+
+      <div class="bg-[#0f766e] rounded-2xl px-5 py-4 shadow-sm flex items-center gap-4">
+        <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-calendar-plus text-white text-[14px]"></i>
+        </div>
+        <div>
+          <p class="text-[10.5px] font-bold text-white/70 uppercase tracking-wider">This Month</p>
+          <p class="text-[22px] font-black text-white leading-none mt-0.5">+{{ stats.thisMonth }}</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Filters row -->
+    <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+      <div class="relative flex-1 max-w-sm">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[12px]"></i>
+        <input type="text"
+               [ngModel]="searchTerm"
+               (ngModelChange)="onSearch($event)"
+               placeholder="Search candidate, email..."
+               class="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#0f766e] focus:ring-2 focus:ring-[#0f766e]/10 transition-all shadow-sm">
+      </div>
+
+      <select
+        #status
+        (change)="filterByStatus(status.value)"
+        class="px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] font-medium text-slate-600 focus:outline-none focus:border-[#0f766e] cursor-pointer shadow-sm min-w-[170px]">
+        <option value="ALL">All Statuses</option>
+        <option value="ACTIVE">Active</option>
+        <option value="SUSPENDED">Suspended</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       TABLE AREA
+  ══════════════════════════════════════════ -->
+  <div class="mx-8 mb-8">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+
+      <ng-container *ngIf="candidate$ | async as response; else loadingState">
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+
+            <thead class="sticky top-0 z-10">
+            <tr class="bg-slate-50 border-b border-slate-100">
+              <th class="px-6 py-3.5 text-[10.5px] font-extrabold text-slate-400 uppercase tracking-[0.08em]">Name</th>
+              <th class="px-6 py-3.5 text-[10.5px] font-extrabold text-slate-400 uppercase tracking-[0.08em]">Date of Birth</th>
+              <th class="px-6 py-3.5 text-[10.5px] font-extrabold text-slate-400 uppercase tracking-[0.08em]">Phone</th>
+              <th class="px-6 py-3.5 text-[10.5px] font-extrabold text-slate-400 uppercase tracking-[0.08em]">Registered</th>
+              <th class="px-6 py-3.5 text-[10.5px] font-extrabold text-slate-400 uppercase tracking-[0.08em]">Status</th>
+              <th class="px-6 py-3.5 text-[10.5px] font-extrabold text-slate-400 uppercase tracking-[0.08em] text-right">Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <!-- Empty -->
+            <tr *ngIf="response.content?.length === 0">
+              <td colspan="6" class="py-20 text-center">
+                <div class="flex flex-col items-center gap-3">
+                  <div class="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center">
+                    <i class="fa-regular fa-folder-open text-slate-300 text-2xl"></i>
+                  </div>
+                  <p class="text-[14px] font-semibold text-slate-400">No candidates found</p>
+                  <p class="text-[12px] text-slate-300">Try adjusting your filters</p>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Rows -->
+            <tr *ngFor="let candidate of response.content"
+                class="border-b border-slate-50 hover:bg-slate-50/60 transition-colors duration-100 group">
+
+              <!-- Candidate Details -->
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-[#0f766e]/10 flex items-center justify-center text-[11px] font-black text-[#0f766e] shrink-0">
+                    {{ candidate.firstName?.charAt(0) }}{{ candidate.lastName?.charAt(0) }}
+                  </div>
+                  <div class="min-w-0">
+                    <p class="text-[13.5px] font-bold text-slate-900 leading-snug truncate">
+                      {{ candidate.firstName }} {{ candidate.lastName }}
+                    </p>
+                    <p class="text-[11px] text-slate-400 mt-0.5 truncate">{{ candidate.email }}</p>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Date of Birth -->
+              <td class="px-6 py-4">
+                <p class="text-[13px] font-semibold text-slate-700 leading-snug">
+                  {{ candidate.dateOfBirth | date:'yyyy-MM-dd' }}
+                </p>
+              </td>
+
+              <!-- Phone -->
+              <td class="px-6 py-4">
+                <p class="text-[13px] text-slate-600 font-medium">
+                  <i class="fa-solid fa-phone text-[10px] mr-1 text-slate-400"></i>
+                  {{ candidate.phone || 'N/A' }}
+                </p>
+              </td>
+
+              <!-- Registered -->
+              <td class="px-6 py-4">
+                <p class="text-[13px] text-slate-600 font-medium">{{ candidate.createdAt | date:'MMM d, y' }}</p>
+                <p class="text-[11px] text-slate-400 mt-0.5">{{ candidate.createdAt | date:'EEEE' }}</p>
+              </td>
+
+              <!-- Status -->
+              <td class="px-6 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10.5px] font-bold uppercase tracking-wider"
+                        [ngClass]="{
+                          'bg-emerald-50 text-emerald-700 border border-emerald-100': candidate.status === Status.ACTIVE,
+                          'bg-rose-50 text-rose-700 border border-rose-100': candidate.status === Status.SUSPENDED
+                        }">
+                    <span class="w-1.5 h-1.5 rounded-full"
+                          [ngClass]="{
+                            'bg-emerald-500': candidate.status === Status.ACTIVE,
+                            'bg-rose-500': candidate.status === Status.SUSPENDED
+                          }"></span>
+                    {{ candidate.status }}
+                  </span>
+              </td>
+
+              <!-- Actions -->
+              <td class="px-6 py-4">
+                <div class="flex items-center justify-end gap-1.5 opacity-100 transition-opacity duration-150">
+                  <button
+                    *ngIf="candidate.status === 'SUSPENDED'"
+                    (click)="activateCandidate(candidate.id)"
+                    title="Activate Account"
+                    class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 flex items-center justify-center transition-colors cursor-pointer">
+                    <i class="fa-solid fa-circle-check text-[11px]"></i>
+                  </button>
+                  <button
+                    *ngIf="candidate.status === 'ACTIVE'"
+                    (click)="suspendCandidate(candidate.id)"
+                    title="Suspend Account"
+                    class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 flex items-center justify-center transition-colors cursor-pointer">
+                    <i class="fa-solid fa-ban text-[11px]"></i>
+                  </button>
+                  <button
+                    (click)="deleteCandidate(candidate.id)"
+                    title="Delete Account"
+                    class="w-8 h-8 rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 flex items-center justify-center transition-colors cursor-pointer">
+                    <i class="fa-regular fa-trash-can text-[11px]"></i>
+                  </button>
+                </div>
+              </td>
+
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="border-t border-slate-100 px-6 py-3.5 flex items-center justify-between shrink-0 bg-slate-50/50">
+          <p class="text-[12px] text-slate-400 font-medium">
+            Page <span class="text-slate-700 font-bold">{{ page + 1 }}</span>
+            of <span class="text-slate-700 font-bold">{{ response.totalPages || 1 }}</span>
+            &nbsp;·&nbsp;
+            <span class="text-slate-700 font-bold">{{ response.totalElements }}</span> total candidates
+          </p>
+          <div class="flex gap-2">
+            <button
+              [disabled]="page === 0"
+              (click)="changePage(page - 1)"
+              class="px-4 py-1.5 rounded-lg border border-slate-200 bg-white text-[12px] font-semibold text-slate-600 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+              ← Prev
+            </button>
+            <button
+              [disabled]="page >= (response.totalPages - 1)"
+              (click)="changePage(page + 1)"
+              class="px-4 py-1.5 rounded-lg border border-slate-200 bg-white text-[12px] font-semibold text-slate-600 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+              Next →
+            </button>
+          </div>
+        </div>
+
+      </ng-container>
+    </div>
+  </div>
+
+</div>
+
+<!-- Loading Template -->
+<ng-template #loadingState>
+  <div class="flex flex-col items-center justify-center py-20 gap-3">
+    <div class="w-8 h-8 border-[2.5px] border-[#0f766e] border-t-transparent rounded-full animate-spin"></div>
+    <p class="text-[13px] text-slate-500 font-medium">Loading candidates...</p>
+  </div>
+</ng-template>

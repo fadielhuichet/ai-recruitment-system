@@ -1,0 +1,7 @@
+{
+    "/auth":{
+        "target":"http://localhost:8086/AUTHENTICATION-SERVICE",
+        "secure":false,
+        "changeOrigin":false
+    }
+}

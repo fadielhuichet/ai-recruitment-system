@@ -1,0 +1,427 @@
+<div class="flex flex-col min-h-[calc(100vh-64px)]  rounded-2xl">
+
+  <!-- ══════════════════════════════════════════
+       TOP BAR
+  ══════════════════════════════════════════ -->
+  <div class="shrink-0 px-8 pt-7 pb-5 space-y-6">
+
+    <!-- Title row -->
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[11px] font-bold tracking-[0.15em] text-[#0f766e] uppercase mb-1">Platform Overview</p>
+        <h1 class="text-[28px] font-black text-slate-900 tracking-tight leading-none">Job Postings</h1>
+      </div>
+
+    </div>
+
+    <!-- Stats row -->
+    <div *ngIf="stats$ | async as stats" class="grid grid-cols-4 gap-3">
+
+      <div class="bg-white rounded-2xl border border-slate-100 px-5 py-4 shadow-sm flex items-center gap-4">
+        <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-briefcase text-slate-500 text-[14px]"></i>
+        </div>
+        <div>
+          <p class="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider">Total</p>
+          <p class="text-[22px] font-black text-slate-900 leading-none mt-0.5">{{ stats.total }}</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-100 px-5 py-4 shadow-sm flex items-center gap-4">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-circle-check text-emerald-500 text-[14px]"></i>
+        </div>
+        <div>
+          <p class="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider">Active</p>
+          <p class="text-[22px] font-black text-emerald-600 leading-none mt-0.5">{{ stats.active }}</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-100 px-5 py-4 shadow-sm flex items-center gap-4">
+        <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-lock text-slate-400 text-[14px]"></i>
+        </div>
+        <div>
+          <p class="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider">Closed</p>
+          <p class="text-[22px] font-black text-slate-600 leading-none mt-0.5">{{ stats.closed }}</p>
+        </div>
+      </div>
+
+      <div class="bg-[#0f766e] rounded-2xl px-5 py-4 shadow-sm flex items-center gap-4">
+        <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-calendar-plus text-white text-[14px]"></i>
+        </div>
+        <div>
+          <p class="text-[10.5px] font-bold text-white/70 uppercase tracking-wider">This Month</p>
+          <p class="text-[22px] font-black text-white leading-none mt-0.5">+{{ stats.thisMonth }}</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Filters row -->
+    <div class="flex items-center gap-3">
+
+      <div class="relative flex-1 max-w-sm">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[12px]"></i>
+        <input
+          type="text"
+          [ngModel]="searchTerm"
+          (ngModelChange)="onSearch($event)"
+          placeholder="Search jobs, companies, locations..."
+          class="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#0f766e] focus:ring-2 focus:ring-[#0f766e]/10 transition-all shadow-sm"
+        />
+      </div>
+
+      <div class="relative flex-1 max-w-sm">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[12px]"></i>
+        <input
+          type="text"
+          [ngModel]="recruiterTerm"
+          (ngModelChange)="onSearchRecruiter($event)"
+          placeholder="Search recruiter name"
+          class="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#0f766e] focus:ring-2 focus:ring-[#0f766e]/10 transition-all shadow-sm"
+        />
+      </div>
+
+      <select
+        [(ngModel)]="selectedStatus"
+        (change)="onFilterChange($event)"
+        class="px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-[13px] font-medium text-slate-600 focus:outline-none focus:border-[#0f766e] cursor-pointer shadow-sm min-w-[130px]">
+        <option value="">All Statuses</option>
+        <option value="ACTIVE">Active</option>
+        <option value="CLOSED">Closed</option>
+      </select>
+
+      <!-- Active filter indicators -->
+      <div *ngIf="searchTerm || selectedStatus || selectedRecruiterFilter"
+           class="flex items-center gap-2 ml-1">
+        <span class="text-[12px] text-slate-400 font-medium">Filtered</span>
+        <button (click)="clearFilters()"
+                class="text-[11px] font-bold text-[#0f766e] hover:underline cursor-pointer">
+          Clear
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       TABLE AREA
+  ══════════════════════════════════════════ -->
+  <div class="mx-8 mb-8">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+
+      <!-- Loading overlay -->
+      <div *ngIf="loading"
+           class="absolute inset-0 z-20 bg-white/70 backdrop-blur-sm flex flex-col items-center justify-center rounded-2xl">
+        <div class="w-8 h-8 border-[2.5px] border-[#0f766e] border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-[13px] text-slate-500 font-medium mt-3">Loading jobs...</p>
+      </div>
+
+      <ng-container *ngIf="jobsResponse as response">
+
+        <!-- Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+
+            <thead class="sticky top-0 z-10">
+            <tr class="bg-slate-50 border-b border-slate-100">
+              <th class="px-6 py-3.5 text-[10.5px] font-extrabold text-slate-400 uppercase tracking-[0.08em]">Job</th>
+              <th class="px-6 py-3.5 text-[10.5px] font-extrabold text-slate-400 uppercase tracking-[0.08em]">Recruiter</th>
+              <th class="px-6 py-3.5 text-[10.5px] font-extrabold text-slate-400 uppercase tracking-[0.08em] text-center">Applicants</th>
+              <th class="px-6 py-3.5 text-[10.5px] font-extrabold text-slate-400 uppercase tracking-[0.08em]">Status</th>
+              <th class="px-6 py-3.5 text-[10.5px] font-extrabold text-slate-400 uppercase tracking-[0.08em]">Posted</th>
+              <th class="px-6 py-3.5 text-[10.5px] font-extrabold text-slate-400 uppercase tracking-[0.08em] text-right">Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <!-- Empty -->
+            <tr *ngIf="response.content?.length === 0">
+              <td colspan="6" class="py-20 text-center">
+                <div class="flex flex-col items-center gap-3">
+                  <div class="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center">
+                    <i class="fa-regular fa-folder-open text-slate-300 text-2xl"></i>
+                  </div>
+                  <p class="text-[14px] font-semibold text-slate-400">No jobs found</p>
+                  <p class="text-[12px] text-slate-300">Try adjusting your filters</p>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Rows -->
+            <tr *ngFor="let job of response.content; let i = index"
+                class="border-b border-slate-50 hover:bg-slate-50/60 transition-colors duration-100 group">
+
+              <!-- Job Info -->
+              <td class="px-6 py-4">
+                <button (click)="openJobDrawer(job)"
+                        class="text-left group/title cursor-pointer">
+                  <p class="text-[13.5px] font-bold text-slate-900 group-hover/title:text-[#0f766e] transition-colors leading-snug">
+                    {{ job.title }}
+                  </p>
+                  <div class="flex items-center gap-2 mt-1">
+                      <span class="text-[11px] text-slate-400 flex items-center gap-1">
+                        <i class="fa-regular fa-building text-[10px]"></i> {{ job.company }}
+                      </span>
+                    <span class="text-slate-200">·</span>
+                    <span class="text-[11px] text-slate-400 flex items-center gap-1">
+                        <i class="fa-solid fa-location-dot text-[10px]"></i> {{ job.location }}
+                      </span>
+                  </div>
+                </button>
+              </td>
+
+              <!-- Recruiter -->
+              <td class="px-6 py-4">
+                <button (click)="openRecruiterDrawer(job, $event)"
+                        class="flex items-center gap-2.5 group/rec cursor-pointer">
+                  <div class="w-8 h-8 rounded-full bg-[#0f766e]/10 flex items-center justify-center text-[11px] font-black text-[#0f766e] shrink-0">
+                    {{ job.recruiterFirstName?.charAt(0) }}{{ job.recruiterLastName?.charAt(0) }}
+                  </div>
+                  <div class="text-left">
+                    <p class="text-[13px] font-semibold text-slate-700 group-hover/rec:text-[#0f766e] transition-colors leading-snug">
+                      {{ job.recruiterFirstName }} {{ job.recruiterLastName }}
+                    </p>
+                    <p class="text-[11px] text-slate-400">{{ job.recruiterEmail }}</p>
+                  </div>
+                </button>
+              </td>
+
+              <!-- Applicants -->
+              <td class="px-6 py-4 text-center">
+                <div class="inline-flex flex-col items-center">
+                    <span class="text-[16px] font-black text-slate-800">
+                      {{ applicantCounts[job.id] ?? 0 }}
+                    </span>
+                  <span class="text-[10px] text-slate-400 font-medium -mt-0.5">applicants</span>
+                </div>
+              </td>
+
+              <!-- Status -->
+              <td class="px-6 py-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10.5px] font-bold uppercase tracking-wider"
+                        [ngClass]="{
+                          'bg-emerald-50 text-emerald-700 border border-emerald-100': job.status === 'ACTIVE',
+                          'bg-slate-100 text-slate-500 border border-slate-200': job.status === 'CLOSED'
+                        }">
+                    <span class="w-1.5 h-1.5 rounded-full"
+                          [ngClass]="{
+                            'bg-emerald-500': job.status === 'ACTIVE',
+                            'bg-slate-400': job.status === 'CLOSED'
+                          }"></span>
+                    {{ job.status }}
+                  </span>
+              </td>
+
+              <!-- Date -->
+              <td class="px-6 py-4">
+                <p class="text-[13px] text-slate-600 font-medium">{{ job.createdAt | date:'MMM d, y' }}</p>
+                <p class="text-[11px] text-slate-400 mt-0.5">{{ job.createdAt | date:'EEEE' }}</p>
+              </td>
+
+              <!-- Actions -->
+              <td class="px-6 py-4">
+                <div class="flex items-center justify-end gap-1.5 opacity-100 transition-opacity duration-150">
+                  <button *ngIf="job.status === 'CLOSED'"
+                          (click)="activateJob(job.id)"
+                          title="Activate"
+                          class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 flex items-center justify-center transition-colors cursor-pointer">
+                    <i class="fa-solid fa-play text-[10px]"></i>
+                  </button>
+                  <button *ngIf="job.status === 'ACTIVE'"
+                          (click)="suspendJob(job.id)"
+                          title="Close"
+                          class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 flex items-center justify-center transition-colors cursor-pointer">
+                    <i class="fa-solid fa-ban text-[10px]"></i>
+                  </button>
+                  <button (click)="openDeleteConfirm(job.id)"
+                          title="Delete"
+                          class="w-8 h-8 rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 flex items-center justify-center transition-colors cursor-pointer">
+                    <i class="fa-regular fa-trash-can text-[10px]"></i>
+                  </button>
+                </div>
+              </td>
+
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="border-t border-slate-100 px-6 py-3.5 flex items-center justify-between shrink-0 bg-slate-50/50">
+          <p class="text-[12px] text-slate-400 font-medium">
+            Page <span class="text-slate-700 font-bold">{{ page + 1 }}</span>
+            of <span class="text-slate-700 font-bold">{{ response.totalPages || 1 }}</span>
+            &nbsp;·&nbsp;
+            <span class="text-slate-700 font-bold">{{ response.totalElements }}</span> total jobs
+          </p>
+          <div class="flex gap-2">
+            <button [disabled]="page === 0" (click)="changePage(page - 1)"
+                    class="px-4 py-1.5 rounded-lg border border-slate-200 bg-white text-[12px] font-semibold text-slate-600 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+              ← Prev
+            </button>
+            <button [disabled]="page >= (response.totalPages - 1)" (click)="changePage(page + 1)"
+                    class="px-4 py-1.5 rounded-lg border border-slate-200 bg-white text-[12px] font-semibold text-slate-600 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+              Next →
+            </button>
+          </div>
+        </div>
+
+      </ng-container>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════
+     BACKDROP
+══════════════════════════════════════════ -->
+<div *ngIf="selectedJob || selectedRecruiterId"
+     (click)="closeDrawers()"
+     class="fixed inset-0 bg-slate-900/25 backdrop-blur-[2px] z-40"></div>
+
+<!-- ══════════════════════════════════════════
+     DRAWER
+══════════════════════════════════════════ -->
+<aside class="fixed inset-y-0 right-0 z-50 w-full sm:w-[480px] bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-out"
+       [class.translate-x-0]="selectedJob || selectedRecruiterId"
+       [class.translate-x-full]="!selectedJob && !selectedRecruiterId">
+
+  <!-- Drawer header -->
+  <div class="flex items-center justify-between px-6 py-5 border-b border-slate-100 shrink-0">
+    <div>
+      <p class="text-[10.5px] font-bold tracking-[0.12em] text-[#0f766e] uppercase">
+        {{ selectedJob ? 'Job Details' : 'Recruiter Profile' }}
+      </p>
+    </div>
+    <button (click)="closeDrawers()"
+            class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center transition-colors cursor-pointer">
+      <i class="fa-solid fa-xmark text-[13px]"></i>
+    </button>
+  </div>
+
+  <div class="flex-1 overflow-y-auto">
+
+    <!-- JOB VIEW -->
+    <div *ngIf="selectedJob" class="p-6 space-y-5">
+
+      <div class="space-y-3">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#0f766e]/10 text-[#0f766e] text-[10.5px] font-bold uppercase tracking-wider">
+          <i class="fa-solid fa-layer-group text-[9px]"></i>
+          {{ selectedJob.category?.label || 'Uncategorized' }}
+        </span>
+        <h2 class="text-[22px] font-black text-slate-900 leading-tight">{{ selectedJob.title }}</h2>
+        <div class="flex items-center gap-4 text-[13px] text-slate-500">
+          <span class="flex items-center gap-1.5 font-medium">
+            <i class="fa-regular fa-building text-slate-400"></i> {{ selectedJob.company }}
+          </span>
+          <span class="flex items-center gap-1.5 font-medium">
+            <i class="fa-solid fa-location-dot text-slate-400"></i> {{ selectedJob.location }}
+          </span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+          <p class="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider mb-1">Status</p>
+          <span class="inline-flex items-center gap-1.5 text-[12.5px] font-bold"
+                [ngClass]="{'text-emerald-600': selectedJob.status === 'ACTIVE', 'text-slate-500': selectedJob.status === 'CLOSED'}">
+            <span class="w-2 h-2 rounded-full"
+                  [ngClass]="{'bg-emerald-500': selectedJob.status === 'ACTIVE', 'bg-slate-400': selectedJob.status === 'CLOSED'}"></span>
+            {{ selectedJob.status }}
+          </span>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+          <p class="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider mb-1">Applicants</p>
+          <p class="text-[18px] font-black text-slate-900">{{ applicantCounts[selectedJob.id] ?? 0 }}</p>
+        </div>
+      </div>
+
+      <div>
+        <p class="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider mb-3">Description</p>
+        <div class="job-description text-[14.5px] text-slate-600 leading-relaxed font-normal">
+          <div [innerHTML]="selectedJob.description"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RECRUITER VIEW -->
+    <div *ngIf="selectedRecruiterId && selectedRecruiter" class="p-6 space-y-5">
+
+      <div class="flex items-center gap-4 p-5 bg-slate-50 rounded-2xl border border-slate-100">
+        <div class="w-16 h-16 rounded-2xl bg-[#0f766e] flex items-center justify-center text-white text-xl font-black shrink-0">
+          {{ selectedRecruiter.firstName?.charAt(0) }}{{ selectedRecruiter.lastName?.charAt(0) }}
+        </div>
+        <div>
+          <h2 class="text-[18px] font-black text-slate-900 leading-tight">
+            {{ selectedRecruiter.firstName }} {{ selectedRecruiter.lastName }}
+          </h2>
+          <p class="text-[13px] text-slate-500 font-medium mt-0.5">{{ selectedRecruiter.company }}</p>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <p class="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider mb-3">Contact</p>
+
+        <div class="flex items-center gap-3 p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+          <div class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center shrink-0">
+            <i class="fa-regular fa-envelope text-slate-400 text-[12px]"></i>
+          </div>
+          <span class="text-[13px] text-slate-700 font-medium truncate">{{ selectedRecruiter.email }}</span>
+        </div>
+
+        <div class="flex items-center gap-3 p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+          <div class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-phone text-slate-400 text-[12px]"></i>
+          </div>
+          <span class="text-[13px] text-slate-700 font-medium">{{ selectedRecruiter.phone || 'N/A' }}</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</aside>
+<!-- ======================================== -->
+<!-- CUSTOM DELETE CONFIRMATION MODAL         -->
+<!-- ======================================== -->
+<div *ngIf="isDeleteModalOpen" class="fixed inset-0 z-[70] flex items-center justify-center">
+
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"
+       (click)="closeDeleteConfirm()"></div>
+
+  <!-- Modal Box -->
+  <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 overflow-hidden transform transition-all animate-in fade-in zoom-in-95 duration-200">
+
+    <!-- Warning Icon -->
+    <div class="mx-auto flex items-center justify-center w-14 h-14 rounded-full bg-rose-100 mb-5">
+      <i class="fa-solid fa-triangle-exclamation text-2xl text-rose-600"></i>
+    </div>
+
+    <!-- Text -->
+    <div class="text-center mb-6">
+      <h3 class="text-lg font-bold text-slate-900 mb-2">Delete Job Posting?</h3>
+      <p class="text-[13px] text-slate-500 leading-relaxed">
+        Are you sure you want to permanently delete this job? All associated data and applicant references will be removed. <br>
+        <span class="font-semibold text-rose-600 mt-1 block">This action cannot be undone.</span>
+      </p>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex items-center gap-3">
+      <button (click)="closeDeleteConfirm()"
+              class="flex-1 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl text-[13px] font-bold hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
+        Cancel
+      </button>
+      <button (click)="confirmDelete()"
+              class="flex-1 px-4 py-2.5 bg-rose-600 text-white rounded-xl text-[13px] font-bold hover:bg-rose-700 shadow-sm shadow-rose-600/20 active:scale-[0.98] transition-all cursor-pointer">
+        Yes, Delete Job
+      </button>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,291 @@
+<header
+  class="sticky top-0 z-50 w-full bg-white/85 backdrop-blur-xl border-b border-slate-200/80 shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-transform duration-300 ease-in-out"
+  [class.-translate-y-full]="!isVisible"
+  [class.translate-y-0]="isVisible">
+  <div class="mx-auto flex h-16 sm:h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+
+    <!-- ======================================== -->
+    <!-- LOGO -->
+    <!-- ======================================== -->
+    <div class="flex items-center shrink-0 h-full py-2">
+      <img
+        src="assets/lastOne.png"
+        alt="RecruWise Logo"
+        class="w-auto h-10 object-contain cursor-pointer transition-transform hover:scale-[1.02]"
+        (click)="reload()"
+      />
+    </div>
+
+    <!-- ======================================== -->
+    <!-- DESKTOP NAVIGATION -->
+    <!-- ======================================== -->
+    <nav class="hidden md:flex items-center gap-1.5 lg:gap-2">
+
+      <a routerLink="/home"
+         routerLinkActive="bg-teal-50/60 !text-[#0f766e]"
+         [routerLinkActiveOptions]="{exact: true}"
+         class="px-3.5 py-2 rounded-lg text-[13.5px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all cursor-pointer">
+        Home
+      </a>
+
+      <!-- Dashboard (Admin) -->
+      <a *ngIf="isAdmins"
+         routerLink="/admin/admin-dashboard"
+         routerLinkActive="bg-teal-50/60 !text-[#0f766e]"
+         class="px-3.5 py-2 rounded-lg text-[13.5px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all cursor-pointer">
+        Dashboard
+      </a>
+
+      <!-- Dashboard (Recruiter) -->
+      <a *ngIf="isRecruiters"
+         routerLink="/recruiter/dashboard"
+         routerLinkActive="bg-teal-50/60 !text-[#0f766e]"
+         class="px-3.5 py-2 rounded-lg text-[13.5px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all cursor-pointer">
+        Dashboard
+      </a>
+
+      <!-- Applications (Candidate) -->
+      <a *ngIf="isCandidates"
+         routerLink="/candidate/candidate-dashboard"
+         routerLinkActive="bg-teal-50/60 !text-[#0f766e]"
+         class="px-3.5 py-2 rounded-lg text-[13.5px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all cursor-pointer">
+        My Applications
+      </a>
+
+      <!-- Jobs -->
+      <a routerLink="/jobs"
+         routerLinkActive="bg-teal-50/60 !text-[#0f766e]"
+         class="px-3.5 py-2 rounded-lg text-[13.5px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all cursor-pointer">
+        Jobs
+      </a>
+
+      <!-- About -->
+      <a routerLink="/contact"
+         routerLinkActive="bg-teal-50/60 !text-[#0f766e]"
+         [routerLinkActiveOptions]="{exact: true}"
+         class="px-3.5 py-2 rounded-lg text-[13.5px] font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all cursor-pointer">
+        Contact
+      </a>
+
+      <!-- Divider -->
+      <div class="h-6 w-px bg-slate-200 mx-2 hidden lg:block"></div>
+
+      <!-- UNIFIED CTA BUTTON (Not Logged In) -->
+      <a *ngIf="!tokenService.hasToken()"
+         routerLink="/login"
+         class="ml-2 px-5 py-2.5 border rounded-xl border-slate-200  bg-[#0f766e] hover:bg-[#0c5c56] text-teal-50 text-sm font-semibold shadow-sm hover:shadow-md hover:shadow-[#0f766e]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0f766e] focus-visible:ring-offset-2 active:scale-[0.98] transition-all duration-200 ease-out cursor-pointer flex items-center gap-2 group">
+        <span class="tracking-[1px]">Get Started</span>
+        <i class="fa-solid fa-arrow-right text-[11px] text-white/90 transition-transform duration-200 ease-out group-hover:translate-x-1"></i>
+      </a>
+
+      <!-- ======================================== -->
+      <!-- USER PROFILE DROPDOWNS (Logged In) -->
+      <!-- ======================================== -->
+
+      <!-- ADMIN Profile -->
+      <div *ngIf="tokenService.hasToken() && admin" class="relative outline-none ml-2" tabindex="0" (blur)="isProfileMenuOpen = false">
+        <button (click)="isProfileMenuOpen = !isProfileMenuOpen"
+                class="flex items-center gap-2.5 p-1 pr-3.5 rounded-full border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 transition-all cursor-pointer focus:ring-2 focus:ring-[#0f766e]/20 group">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center text-white font-bold text-[11px] shadow-inner">
+            {{ admin.username.charAt(0) | uppercase }}
+          </div>
+          <span class="text-[13px] font-bold text-slate-700 hidden lg:block">{{ admin.username }}</span>
+          <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 group-hover:text-slate-600 transition-colors" [class.rotate-180]="isProfileMenuOpen"></i>
+        </button>
+
+        <!-- Admin Dropdown Menu -->
+        <div *ngIf="isProfileMenuOpen" class="absolute right-0 mt-2 w-56 bg-white border border-slate-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] py-2 z-50 animate-[fadeIn_0.15s_ease-out]">
+          <div class="px-5 py-3 border-b border-slate-100 bg-slate-50/50 mb-1.5 rounded-t-2xl">
+            <p class="text-[14px] font-extrabold text-slate-900 truncate">{{ admin.username }}</p>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-0.5 truncate">Administrator</p>
+          </div>
+          <div class="px-1.5 space-y-0.5">
+            <button (mousedown)="$event.preventDefault(); toProfileAdmin()" class="w-full text-left px-3 py-2 rounded-lg text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-[#0f766e] flex items-center gap-3 transition-colors cursor-pointer">
+              <i class="fa-regular fa-user text-slate-400 w-4 text-center"></i> Profile
+            </button>
+            <div class="h-px bg-slate-100 my-1 mx-2"></div>
+            <button (mousedown)="$event.preventDefault(); logout()" class="w-full text-left px-3 py-2 rounded-lg text-[13px] font-semibold text-rose-600 hover:bg-rose-50 flex items-center gap-3 transition-colors cursor-pointer">
+              <i class="fa-solid fa-arrow-right-from-bracket w-4 text-center"></i> Log out
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RECRUITER Profile -->
+      <div *ngIf="tokenService.hasToken() && recruiter" class="relative outline-none ml-2" tabindex="0" (blur)="isProfileMenuOpen = false">
+        <button (click)="isProfileMenuOpen = !isProfileMenuOpen"
+                class="flex items-center gap-2.5 p-1 pr-3.5 rounded-full border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 transition-all cursor-pointer focus:ring-2 focus:ring-[#0f766e]/20 group">
+          <div class="w-9 h-9 rounded-full overflow-hidden bg-[#0f766e]/10 flex items-center justify-center shrink-0">
+            <img
+              *ngIf="recruiter.profileImage"
+              [src]="recruiterService.getProfileImageUrl(recruiter.profileImage)"
+              class="w-full h-full object-cover"
+              alt="avatar"
+            />
+            <span
+              *ngIf="!recruiter.profileImage"
+              class="text-[11px] font-black text-[#0f766e]">
+              {{ recruiter.firstName?.charAt(0) }}{{ recruiter.lastName?.charAt(0) }}
+            </span>
+          </div>
+          <span class="text-[13px] font-bold text-slate-700 hidden lg:block">{{ recruiter.firstName }}</span>
+          <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 group-hover:text-slate-600 transition-colors" [class.rotate-180]="isProfileMenuOpen"></i>
+        </button>
+
+        <!-- Recruiter Dropdown Menu -->
+        <div *ngIf="isProfileMenuOpen" class="absolute right-0 mt-2 w-56 bg-white border border-slate-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] py-2 z-50 animate-[fadeIn_0.15s_ease-out]">
+          <div class="px-5 py-3 border-b border-slate-100 bg-slate-50/50 mb-1.5 rounded-t-2xl">
+            <p class="text-[14px] font-extrabold text-slate-900 truncate">{{ recruiter.firstName }} {{ recruiter.lastName }}</p>
+            <p class="text-[11px] font-bold text-[#0f766e] uppercase tracking-wider mt-0.5 truncate">Recruiter</p>
+          </div>
+          <div class="px-1.5 space-y-0.5">
+            <button (mousedown)="$event.preventDefault(); toProfile()" class="w-full text-left px-3 py-2 rounded-lg text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-[#0f766e] flex items-center gap-3 transition-colors cursor-pointer">
+              <i class="fa-regular fa-user text-slate-400 w-4 text-center"></i> View Profile
+            </button>
+            <button (mousedown)="$event.preventDefault(); toSetting()" class="w-full text-left px-3 py-2 rounded-lg text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-[#0f766e] flex items-center gap-3 transition-colors cursor-pointer">
+              <i class="fa-solid fa-gear text-slate-400 w-4 text-center"></i> Settings
+            </button>
+            <div class="h-px bg-slate-100 my-1 mx-2"></div>
+            <button (mousedown)="$event.preventDefault(); logout()" class="w-full text-left px-3 py-2 rounded-lg text-[13px] font-semibold text-rose-600 hover:bg-rose-50 flex items-center gap-3 transition-colors cursor-pointer">
+              <i class="fa-solid fa-arrow-right-from-bracket w-4 text-center"></i> Log out
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CANDIDATE Profile -->
+      <div *ngIf="tokenService.hasToken() && candidate" class="relative outline-none ml-2" tabindex="0" (blur)="isProfileMenuOpen = false">
+        <button (click)="isProfileMenuOpen = !isProfileMenuOpen"
+                class="flex items-center gap-2.5 p-1 pr-3.5 rounded-full border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 transition-all cursor-pointer focus:ring-2 focus:ring-[#0f766e]/20 group">
+          <div class="w-9 h-9 rounded-full overflow-hidden bg-[#0f766e]/10 flex items-center justify-center shrink-0">
+            <img
+              *ngIf="candidate.profileImage"
+              [src]=""
+              class="w-full h-full object-cover"
+              alt="avatar"
+            />
+            <span
+              *ngIf="!candidate.profileImage"
+              class="text-[11px] font-black text-[#0f766e]">
+              {{ candidate.firstName?.toUpperCase()?.charAt(0) }}
+            </span>
+          </div>
+          <span class="text-[13px] font-bold text-slate-700 hidden lg:block">{{ candidate.firstName }}</span>
+          <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 group-hover:text-slate-600 transition-colors" [class.rotate-180]="isProfileMenuOpen"></i>
+        </button>
+
+        <!-- Candidate Dropdown Menu -->
+        <div *ngIf="isProfileMenuOpen" class="absolute right-0 mt-2 w-56 bg-white border border-slate-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] py-2 z-50 animate-[fadeIn_0.15s_ease-out]">
+          <div class="px-5 py-3 border-b border-slate-100 bg-slate-50/50 mb-1.5 rounded-t-2xl">
+            <p class="text-[14px] font-extrabold text-slate-900 truncate">{{ candidate.firstName }} {{ candidate.lastName }}</p>
+            <p class="text-[11px] font-bold text-[#0f766e] uppercase tracking-wider mt-0.5 truncate">Candidate</p>
+          </div>
+          <div class="px-1.5 space-y-0.5">
+            <button (mousedown)="$event.preventDefault(); toProfileCandidate()" class="w-full text-left px-3 py-2 rounded-lg text-[13px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-[#0f766e] flex items-center gap-3 transition-colors cursor-pointer">
+              <i class="fa-regular fa-user text-slate-400 w-4 text-center"></i> View Profile
+            </button>
+
+            <div class="h-px bg-slate-100 my-1 mx-2"></div>
+            <button (mousedown)="$event.preventDefault(); logout()" class="w-full text-left px-3 py-2 rounded-lg text-[13px] font-semibold text-rose-600 hover:bg-rose-50 flex items-center gap-3 transition-colors cursor-pointer">
+              <i class="fa-solid fa-arrow-right-from-bracket w-4 text-center"></i> Log out
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </nav>
+
+    <!-- ======================================== -->
+    <!-- MOBILE MENU TOGGLE -->
+    <!-- ======================================== -->
+    <button class="md:hidden w-10 h-10 rounded-xl flex items-center justify-center text-slate-600 hover:bg-slate-100 border-none bg-transparent cursor-pointer transition-colors"
+            (click)="isMenuOpen = !isMenuOpen" aria-label="Toggle menu">
+      <i class="fa-solid text-lg" [ngClass]="isMenuOpen ? 'fa-xmark' : 'fa-bars'"></i>
+    </button>
+  </div>
+
+  <!-- ======================================== -->
+  <!-- MOBILE MENU (Slide down) -->
+  <!-- ======================================== -->
+  <div *ngIf="isMenuOpen" class="md:hidden absolute top-full left-0 w-full bg-white border-b border-slate-200 shadow-2xl animate-[slideDown_0.2s_ease-out]">
+    <div class="flex flex-col px-4 py-4 gap-1 h-screen max-h-[calc(100vh-64px)] overflow-y-auto">
+
+      <!-- Navigation Links -->
+      <a routerLink="/home" routerLinkActive="bg-teal-50 text-[#0f766e]" [routerLinkActiveOptions]="{exact: true}" (click)="isMenuOpen = false"
+         class="px-4 py-3 rounded-xl text-[15px] font-bold text-slate-700 hover:bg-slate-50 transition-colors">Home</a>
+
+      <a *ngIf="isAdmins" routerLink="/admin/admin-dashboard" routerLinkActive="bg-teal-50 text-[#0f766e]" (click)="isMenuOpen = false"
+         class="px-4 py-3 rounded-xl text-[15px] font-bold text-slate-700 hover:bg-slate-50 transition-colors">Dashboard</a>
+
+      <a *ngIf="isRecruiters" routerLink="/recruiter/dashboard" routerLinkActive="bg-teal-50 text-[#0f766e]" (click)="isMenuOpen=false"
+         class="px-4 py-3 rounded-xl text-[15px] font-bold text-slate-700 hover:bg-slate-50 transition-colors">Dashboard</a>
+
+      <a routerLink="/jobs" routerLinkActive="bg-teal-50 text-[#0f766e]" (click)="isMenuOpen = false"
+         class="px-4 py-3 rounded-xl text-[15px] font-bold text-slate-700 hover:bg-slate-50 transition-colors">Jobs</a>
+
+      <!-- UNIFIED CTA (Not Logged In) -->
+      <div *ngIf="!tokenService.hasToken()" class="pt-4 mt-2 border-t border-slate-100 flex flex-col gap-2">
+        <button (click)="toLogin(); isMenuOpen = false"
+                class="w-full py-3.5 rounded-xl bg-[#0f766e] text-white text-[15px] font-bold hover:bg-[#0d6460] shadow-md flex items-center justify-center gap-2 transition-colors">
+          Get Started <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </div>
+
+      <!-- Account Section (Logged in Admin) -->
+      <div *ngIf="tokenService.hasToken() && admin" class="mt-4 pt-4 border-t border-slate-100">
+        <div class="flex items-center gap-4 px-2 mb-5">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center text-white font-bold text-[15px]">
+            {{ admin.username.charAt(0) | uppercase }}
+          </div>
+          <div>
+            <p class="text-[15px] font-extrabold text-slate-900">{{ admin.username }} </p>
+            <p class="text-[12px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Admin</p>
+          </div>
+        </div>
+        <a (click)="toProfileAdmin(); isMenuOpen = false" class="flex items-center gap-3 px-4 py-3.5 rounded-xl text-[14px] font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer">
+          <i class="fa-regular fa-user text-slate-400 w-5"></i> Profile
+        </a>
+        <a (click)="logout(); isMenuOpen = false" class="flex items-center gap-3 px-4 py-3.5 rounded-xl text-[14px] font-bold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer mt-1">
+          <i class="fa-solid fa-arrow-right-from-bracket text-rose-400 w-5"></i> Log out
+        </a>
+      </div>
+
+      <!-- Account Section (Logged in Recruiter) -->
+      <div *ngIf="tokenService.hasToken() && recruiter" class="mt-4 pt-4 border-t border-slate-100">
+        <div class="flex items-center gap-4 px-2 mb-5">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#0f766e] to-teal-500 flex items-center justify-center text-white font-bold text-[15px]">
+            {{ recruiter.firstName.charAt(0) | uppercase }}{{ recruiter.lastName.charAt(0) | uppercase }}
+          </div>
+          <div>
+            <p class="text-[15px] font-extrabold text-slate-900">{{ recruiter.firstName }} {{ recruiter.lastName }}</p>
+            <p class="text-[12px] font-bold text-[#0f766e] uppercase tracking-widest mt-0.5">Recruiter</p>
+          </div>
+        </div>
+        <div class="flex flex-col gap-1">
+          <a (click)="toProfile(); isMenuOpen = false" class="flex items-center gap-3 px-4 py-3.5 rounded-xl text-[14px] font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer">
+            <i class="fa-regular fa-user text-slate-400 w-5"></i> Profile
+          </a>
+          <a (click)="toSetting(); isMenuOpen = false" class="flex items-center gap-3 px-4 py-3.5 rounded-xl text-[14px] font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer">
+            <i class="fa-solid fa-gear text-slate-400 w-5"></i> Settings
+          </a>
+          <a (click)="logout(); isMenuOpen = false" class="flex items-center gap-3 px-4 py-3.5 rounded-xl text-[14px] font-bold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer mt-2">
+            <i class="fa-solid fa-arrow-right-from-bracket text-rose-400 w-5"></i> Log out
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+<!-- Required Keyframes for smooth animations -->
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>

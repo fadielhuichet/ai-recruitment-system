@@ -1,0 +1,50 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  ai:
+    ollama:
+      base-url: ${OLLAMA_URL:http://host.docker.internal:11434}
+      chat:
+        options:
+          model: ${OLLAMA_MODEL:qwen2.5:3b}
+          temperature: ${OLLAMA_TEMPERATURE:0}
+      init:
+        timeout: ${OLLAMA_TIMEOUT:120}
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: fadi.belhuichet@gmail.com
+    password: nfyw lktj jqbl mmmz
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+server:
+  port: 8085
+
+
+jwt:
+  secret: ${JWT_SECRET:7de3893708db70e06bc5159b5fe8225c268a150d0d0775dc4e7207f3454fe8a5}
+  expiration: 86400000
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
+
+
+file:
+  upload-dir: /app/uploads/cvs
+

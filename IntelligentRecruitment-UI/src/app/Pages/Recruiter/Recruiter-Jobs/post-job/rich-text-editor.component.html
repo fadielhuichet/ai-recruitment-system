@@ -1,0 +1,68 @@
+<div class="rounded-lg overflow-hidden border transition-all"
+     [ngClass]="hasError
+       ? 'border-rose-400'
+       : 'border-slate-300 focus-within:border-[#0f766e] focus-within:ring-1 focus-within:ring-[#0f766e]'">
+
+  <!-- Toolbar -->
+  <div class="flex items-center gap-1.5 px-3 py-2 bg-slate-50 border-b border-slate-200">
+
+    <button type="button"
+            (click)="format('heading')"
+            [disabled]="!hasSelection"
+            title="Section Title"
+            class="flex items-center gap-1.5 px-2.5 py-1 rounded text-[12px] font-semibold border transition-all
+                   disabled:opacity-30 disabled:cursor-not-allowed
+                   enabled:cursor-pointer enabled:border-slate-300 enabled:text-slate-600
+                   enabled:hover:border-[#0f766e] enabled:hover:text-[#0f766e] enabled:hover:bg-[#0f766e]/5">
+      <i class="fa-solid fa-heading text-[11px]"></i>
+      Section Title
+    </button>
+
+    <div class="w-px h-4 bg-slate-200"></div>
+
+    <button type="button"
+            (click)="format('bold')"
+            [disabled]="!hasSelection"
+            title="Bold"
+            class="flex items-center gap-1.5 px-2.5 py-1 rounded text-[12px] font-semibold border transition-all
+                   disabled:opacity-30 disabled:cursor-not-allowed
+                   enabled:cursor-pointer enabled:border-slate-300 enabled:text-slate-600
+                   enabled:hover:border-[#0f766e] enabled:hover:text-[#0f766e] enabled:hover:bg-[#0f766e]/5">
+      <i class="fa-solid fa-bold text-[11px]"></i>
+      Bold
+    </button>
+
+    <div class="w-px h-4 bg-slate-200"></div>
+
+    <button type="button"
+            (click)="format('normal')"
+            [disabled]="!hasSelection"
+            title="Normal text"
+            class="flex items-center gap-1.5 px-2.5 py-1 rounded text-[12px] font-semibold border transition-all
+                   disabled:opacity-30 disabled:cursor-not-allowed
+                   enabled:cursor-pointer enabled:border-slate-300 enabled:text-slate-600
+                   enabled:hover:border-[#0f766e] enabled:hover:text-[#0f766e] enabled:hover:bg-[#0f766e]/5">
+      <i class="fa-solid fa-paragraph text-[11px]"></i>
+      Normal
+    </button>
+
+    <!-- Hint -->
+    <span class="ml-auto text-[11px] text-slate-400 italic">
+      {{ hasSelection ? 'Apply a style ↑' : 'Select text to style it' }}
+    </span>
+  </div>
+
+  <!-- Editable area -->
+  <div id="rte-editor"
+       contenteditable="true"
+       (input)="onInput($event)"
+       (blur)="onBlur()"
+       (mouseup)="checkSelection()"
+       (keyup)="checkSelection()"
+       [attr.data-placeholder]="placeholder"
+       class="min-h-[200px] px-3 py-2.5 text-[13px] bg-slate-50 focus:bg-white
+              text-slate-700 leading-relaxed outline-none
+              empty:before:content-[attr(data-placeholder)]
+              empty:before:text-slate-400 empty:before:pointer-events-none">
+  </div>
+</div>

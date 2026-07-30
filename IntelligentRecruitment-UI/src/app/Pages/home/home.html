@@ -1,0 +1,461 @@
+<app-header></app-header>
+
+<div class="bg-white font-sans text-slate-800 pt-16 selection:bg-[#0f766e]/15 selection:text-[#0f766e]">
+
+  <!-- ═══════════════════════════════════════════
+       1. HERO
+  ════════════════════════════════════════════ -->
+  <section class="relative bg-white border-b border-slate-200 overflow-hidden">
+
+    <!-- Hairline grid texture -->
+    <div class="absolute inset-0 pointer-events-none"
+         style="background-image: linear-gradient(rgba(15,118,110,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(15,118,110,0.04) 1px, transparent 1px); background-size: 48px 48px;"></div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 py-24 lg:py-36 relative z-10">
+      <div class="flex flex-col lg:flex-row items-start lg:items-center gap-20">
+
+        <!-- Copy -->
+        <div class="flex-1 max-w-2xl">
+          <div class="inline-flex items-center gap-2 mb-8 border border-slate-200 rounded-sm px-3 py-1.5 bg-white">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#0f766e]"></span>
+            <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.12em]">AI-Powered Recruitment</span>
+          </div>
+
+          <h1 class="text-[3rem] md:text-[3.75rem] lg:text-[4.25rem] font-bold text-slate-950 tracking-[-0.03em] leading-[1.04] mb-7">
+            Stop reading<br/>resumes.<br/>
+            <span class="text-[#0f766e]">Start interviewing.</span>
+          </h1>
+
+          <p class="text-[17px] text-slate-500 leading-[1.75] mb-10 max-w-xl font-light">
+            RecruWise analyzes candidates, ranks applications instantly, and puts data behind every hiring decision — so your team focuses on people, not paperwork.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-start gap-3">
+            <a routerLink="/jobs"
+               class="px-6 py-3 bg-slate-950 text-white text-[13.5px] font-semibold tracking-wide rounded-sm hover:bg-slate-800 transition-colors">
+              Browse Jobs
+            </a>
+            <a *ngIf="!isAuth" routerLink="/login"
+               class="px-6 py-3 border border-slate-200 text-slate-700 text-[13.5px] font-semibold tracking-wide rounded-sm hover:border-slate-400 hover:bg-slate-50 transition-colors">
+              Recruiter Sign In
+            </a>
+          </div>
+        </div>
+
+        <!-- Dashboard mockup -->
+        <div class="flex-1 w-full max-w-[480px] lg:max-w-none">
+          <div class="bg-white border border-slate-200 rounded-sm shadow-[0_2px_40px_rgba(0,0,0,0.08)] overflow-hidden">
+
+            <!-- Mockup topbar -->
+            <div class="px-5 py-3.5 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-7 h-7 rounded-sm bg-slate-900 flex items-center justify-center">
+                  <i class="fa-solid fa-briefcase text-white text-[10px]"></i>
+                </div>
+                <div>
+                  <p class="text-[12.5px] font-semibold text-slate-900">Senior Frontend Engineer</p>
+                  <p class="text-[11px] text-slate-400">42 applicants</p>
+                </div>
+              </div>
+              <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-700 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-sm">Active</span>
+            </div>
+
+            <!-- Column headers -->
+            <div class="grid grid-cols-[1fr_80px_80px] px-5 py-2.5 border-b border-slate-100 bg-slate-50/50">
+              <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Candidate</span>
+              <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest text-center">Status</span>
+              <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest text-right">Match</span>
+            </div>
+
+            <!-- Row 1 -->
+            <div class="grid grid-cols-[1fr_80px_80px] items-center px-5 py-3.5 border-b border-slate-100 bg-teal-50/30">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-sm bg-[#0f766e]/10 border border-[#0f766e]/20 flex items-center justify-center text-[#0f766e] text-[11px] font-bold">MA</div>
+                <div>
+                  <p class="text-[12.5px] font-semibold text-slate-900">Mohamed Aziz</p>
+                  <p class="text-[11px] text-slate-400">2 hours ago</p>
+                </div>
+              </div>
+              <div class="flex justify-center">
+                <span class="text-[10px] font-semibold text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-sm">Reviewed</span>
+              </div>
+              <p class="text-[17px] font-bold text-[#0f766e] text-right tabular-nums">94%</p>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="grid grid-cols-[1fr_80px_80px] items-center px-5 py-3.5 border-b border-slate-100">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-sm bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 text-[11px] font-bold">AS</div>
+                <div>
+                  <p class="text-[12.5px] font-semibold text-slate-900">Alex Smith</p>
+                  <p class="text-[11px] text-slate-400">5 hours ago</p>
+                </div>
+              </div>
+              <div class="flex justify-center">
+                <span class="text-[10px] font-semibold text-violet-700 bg-violet-50 border border-violet-100 px-2 py-0.5 rounded-sm">Analyzed</span>
+              </div>
+              <p class="text-[17px] font-bold text-amber-500 text-right tabular-nums">78%</p>
+            </div>
+
+            <!-- Row 3 — pending -->
+            <div class="grid grid-cols-[1fr_80px_80px] items-center px-5 py-3.5 opacity-40">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-sm bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 text-[11px] font-bold">MJ</div>
+                <div>
+                  <div class="h-2.5 w-24 bg-slate-200 rounded-sm mb-1.5"></div>
+                  <div class="h-2 w-14 bg-slate-100 rounded-sm"></div>
+                </div>
+              </div>
+              <div class="flex justify-center">
+                <div class="h-4 w-12 bg-slate-100 rounded-sm"></div>
+              </div>
+              <div class="flex justify-end">
+                <div class="h-4 w-8 bg-slate-100 rounded-sm"></div>
+              </div>
+            </div>
+
+            <!-- Footer strip -->
+            <div class="px-5 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-[11px] text-slate-400">3 of 42 shown</span>
+              <div class="flex items-center gap-1.5 text-[11px] font-semibold text-[#0f766e]">
+                <i class="fa-solid fa-wand-magic-sparkles text-[9px]"></i>
+                AI analysis complete
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       2. STATS
+  ════════════════════════════════════════════ -->
+  <section class="border-b border-slate-200 bg-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+      <div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-slate-100">
+        <div class="py-10 px-8 text-center">
+          <p class="text-[2.25rem] font-bold text-slate-950 tracking-tight tabular-nums">500+</p>
+          <p class="text-[11.5px] font-medium text-slate-400 uppercase tracking-widest mt-1">Jobs Posted</p>
+        </div>
+        <div class="py-10 px-8 text-center">
+          <p class="text-[2.25rem] font-bold text-slate-950 tracking-tight tabular-nums">10k+</p>
+          <p class="text-[11.5px] font-medium text-slate-400 uppercase tracking-widest mt-1">Resumes Analyzed</p>
+        </div>
+        <div class="py-10 px-8 text-center">
+          <p class="text-[2.25rem] font-bold text-slate-950 tracking-tight tabular-nums">250+</p>
+          <p class="text-[11.5px] font-medium text-slate-400 uppercase tracking-widest mt-1">Active Recruiters</p>
+        </div>
+        <div class="py-10 px-8 text-center">
+          <p class="text-[2.25rem] font-bold text-[#0f766e] tracking-tight tabular-nums">3×</p>
+          <p class="text-[11.5px] font-medium text-slate-400 uppercase tracking-widest mt-1">Faster Hiring</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       3. FEATURES
+  ════════════════════════════════════════════ -->
+  <section class="py-28 bg-slate-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+      <div class="max-w-xl mb-16">
+        <p class="text-[11px] font-semibold text-[#0f766e] uppercase tracking-[0.12em] mb-4">Platform</p>
+        <h2 class="text-[2.25rem] font-bold text-slate-950 tracking-tight leading-[1.1] mb-4">Everything your team needs to hire well</h2>
+        <p class="text-[16px] text-slate-500 leading-relaxed font-light">One platform for job postings, applicant management, AI scoring, and candidate communication.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-slate-200">
+        <!-- Feature 1 -->
+        <div class="bg-white p-8 hover:bg-slate-50/80 transition-colors group">
+          <div class="w-10 h-10 rounded-sm bg-[#0f766e]/8 border border-[#0f766e]/15 flex items-center justify-center text-[#0f766e] mb-7">
+            <i class="fa-solid fa-wand-magic-sparkles text-[14px]"></i>
+          </div>
+          <h3 class="text-[15px] font-semibold text-slate-900 mb-2.5">AI Candidate Scoring</h3>
+          <p class="text-[13.5px] text-slate-500 leading-relaxed">Instant match percentage against your job description. No manual screening.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="bg-white p-8 hover:bg-slate-50/80 transition-colors group">
+          <div class="w-10 h-10 rounded-sm bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 mb-7">
+            <i class="fa-solid fa-users-viewfinder text-[14px]"></i>
+          </div>
+          <h3 class="text-[15px] font-semibold text-slate-900 mb-2.5">Pipeline Management</h3>
+          <p class="text-[13.5px] text-slate-500 leading-relaxed">Stage-based applicant tracking. Filter by score, status, or date — in seconds.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="bg-white p-8 hover:bg-slate-50/80 transition-colors group">
+          <div class="w-10 h-10 rounded-sm bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 mb-7">
+            <i class="fa-solid fa-bolt text-[14px]"></i>
+          </div>
+          <h3 class="text-[15px] font-semibold text-slate-900 mb-2.5">One-Click Decisions</h3>
+          <p class="text-[13.5px] text-slate-500 leading-relaxed">Send automated acceptance or refusal emails directly from the dashboard.</p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="bg-white p-8 hover:bg-slate-50/80 transition-colors group">
+          <div class="w-10 h-10 rounded-sm bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 mb-7">
+            <i class="fa-solid fa-layer-group text-[14px]"></i>
+          </div>
+          <h3 class="text-[15px] font-semibold text-slate-900 mb-2.5">Centralized Dashboard</h3>
+          <p class="text-[13.5px] text-slate-500 leading-relaxed">All job postings, metrics, and team activity — one organized workspace.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       4. HOW IT WORKS
+  ════════════════════════════════════════════ -->
+  <section class="py-28 bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+      <div class="max-w-xl mb-16">
+        <p class="text-[11px] font-semibold text-[#0f766e] uppercase tracking-[0.12em] mb-4">Process</p>
+        <h2 class="text-[2.25rem] font-bold text-slate-950 tracking-tight leading-[1.1]">From job post to perfect hire in days</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-slate-200">
+        <div class="bg-white p-10">
+          <div class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-6">01</div>
+          <h3 class="text-[18px] font-semibold text-slate-900 mb-3">Post a Job</h3>
+          <p class="text-[14px] text-slate-500 leading-relaxed">Create a detailed listing with role requirements, category, and location in under two minutes.</p>
+          <div class="mt-8 pt-8 border-t border-slate-100">
+            <div class="flex items-center gap-2 text-[12px] text-slate-400">
+              <i class="fa-regular fa-clock text-[11px]"></i>
+              ~2 min to post
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-10">
+          <div class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-6">02</div>
+          <h3 class="text-[18px] font-semibold text-slate-900 mb-3">Receive Applications</h3>
+          <p class="text-[14px] text-slate-500 leading-relaxed">Candidates apply directly on RecruWise. All CVs and profiles are collected and organized automatically.</p>
+          <div class="mt-8 pt-8 border-t border-slate-100">
+            <div class="flex items-center gap-2 text-[12px] text-slate-400">
+              <i class="fa-solid fa-arrow-down text-[11px]"></i>
+              All in one inbox
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-10 border-l-2 border-[#0f766e]">
+          <div class="text-[11px] font-bold text-[#0f766e] uppercase tracking-widest mb-6">03</div>
+          <h3 class="text-[18px] font-semibold text-slate-900 mb-3">AI Ranks the Best</h3>
+          <p class="text-[14px] text-slate-500 leading-relaxed">Our model reads every resume and ranks candidates by fit — so you know exactly who to interview first.</p>
+          <div class="mt-8 pt-8 border-t border-slate-100">
+            <div class="flex items-center gap-2 text-[12px] text-[#0f766e]">
+              <i class="fa-solid fa-wand-magic-sparkles text-[11px]"></i>
+              Instant AI analysis
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       5. FEATURED JOBS
+  ════════════════════════════════════════════ -->
+  <section class="py-28 bg-slate-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+      <div class="flex items-end justify-between mb-14">
+        <div>
+          <p class="text-[11px] font-semibold text-[#0f766e] uppercase tracking-[0.12em] mb-3">Opportunities</p>
+          <h2 class="text-[2.25rem] font-bold text-slate-950 tracking-tight leading-tight">Latest openings</h2>
+        </div>
+        <a routerLink="/jobs"
+           class="hidden sm:inline-flex items-center gap-2 text-[13px] font-semibold text-slate-600 hover:text-slate-900 border border-slate-200 px-4 py-2.5 rounded-sm hover:border-slate-400 transition-all">
+          All jobs <i class="fa-solid fa-arrow-right text-[11px]"></i>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-slate-200">
+        <div
+          *ngFor="let job of last3Jobs$ | async"
+          class="bg-white p-8 flex flex-col hover:bg-slate-50/60 transition-colors group"
+        >
+          <div class="flex items-start justify-between mb-6">
+            <div class="w-10 h-10 rounded-sm bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 font-bold text-[12px]">
+              {{ job.company.toUpperCase().charAt(0) }}{{ job.company.toUpperCase().charAt(1) }}
+            </div>
+            <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest border border-slate-200 px-2.5 py-1 rounded-sm">
+              {{ job.category?.label || job.category }}
+            </span>
+          </div>
+
+          <h3 class="text-[16px] font-semibold text-slate-900 mb-1 group-hover:text-[#0f766e] transition-colors leading-snug">
+            {{ job.title }}
+          </h3>
+          <p class="text-[13px] text-slate-400 font-medium mb-5">{{ job.company }}</p>
+
+          <div class="flex items-center gap-5 text-[12px] text-slate-400 mb-8">
+            <span class="flex items-center gap-1.5">
+              <i class="fa-solid fa-location-dot text-[10px]"></i>
+              {{ job.location }}
+            </span>
+            <span class="flex items-center gap-1.5">
+              <i class="fa-regular fa-clock text-[10px]"></i>
+              {{ job.createdAt | date:'MMM d' }}
+            </span>
+          </div>
+
+
+          <a routerLink="/job-details/{{ job.id }}"
+             class="mt-auto inline-flex items-center gap-2 text-[13px] font-semibold text-slate-700 group-hover:text-[#0f766e] transition-colors"
+          >
+            View details <i class="fa-solid fa-arrow-right text-[11px] transition-transform group-hover:translate-x-0.5"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       6. CTA
+  ════════════════════════════════════════════ -->
+  <section class="py-28 bg-slate-950 relative overflow-hidden">
+    <!-- Subtle grid -->
+    <div class="absolute inset-0 pointer-events-none opacity-[0.04]"
+         style="background-image: linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px); background-size: 48px 48px;"></div>
+
+    <!-- Teal accent line -->
+    <div class="absolute top-0 left-0 right-0 h-px bg-[#0f766e]"></div>
+
+    <div class="max-w-4xl mx-auto px-6 lg:px-10 relative z-10">
+      <div class="max-w-2xl mb-12">
+        <p class="text-[11px] font-semibold text-[#0f766e] uppercase tracking-[0.12em] mb-5">Get started</p>
+        <h2 class="text-[2.75rem] md:text-[3.5rem] font-bold text-white tracking-tight leading-[1.06] mb-6">
+          Ready to hire smarter?
+        </h2>
+        <p class="text-[16px] text-slate-400 leading-relaxed font-light">
+          Join hundreds of recruiters who use RecruWise to automate resume screening, organize applicants, and close roles faster.
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-start gap-4 mb-14">
+        <a href="/register"
+           class="px-7 py-3.5 bg-[#0f766e] text-white text-[13.5px] font-semibold tracking-wide rounded-sm hover:bg-[#0d6460] transition-colors">
+          Create Recruiter Account
+        </a>
+        <a routerLink="/jobs"
+           class="px-7 py-3.5 border border-slate-700 text-slate-300 text-[13.5px] font-semibold tracking-wide rounded-sm hover:border-slate-500 hover:text-white transition-colors">
+          Browse Jobs
+        </a>
+      </div>
+
+      <div class="border-t border-slate-800 pt-10 flex flex-wrap gap-8">
+        <div class="flex items-center gap-2.5 text-[13px] text-slate-400">
+          <div class="w-1.5 h-1.5 rounded-full bg-[#0f766e]"></div>
+          AI Resume Ranking
+        </div>
+        <div class="flex items-center gap-2.5 text-[13px] text-slate-400">
+          <div class="w-1.5 h-1.5 rounded-full bg-[#0f766e]"></div>
+          Applicant Pipeline
+        </div>
+        <div class="flex items-center gap-2.5 text-[13px] text-slate-400">
+          <div class="w-1.5 h-1.5 rounded-full bg-[#0f766e]"></div>
+          Email Automation
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════ -->
+  <footer class="bg-white border-t border-slate-200 py-14">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+
+        <!-- Col 1: About -->
+        <div class="flex flex-col gap-4">
+          <div class="flex items-center shrink-0 h py-2">
+            <img
+              src="assets/lastOne.png"
+              alt="RecruWise Logo"
+              class="w-auto h-10 object-contain cursor-pointer transition-transform hover:scale-[1.02]"
+            />
+          </div>
+          <p class="text-[13px] text-slate-500 leading-relaxed">
+            Job listings and employment offers platform. RecruWise is your go-to destination for finding top talent and great opportunities.
+          </p>
+          <div class="flex flex-col gap-2 mt-1">
+            <a href="mailto:recruwise@gmail.com"
+               class="flex items-center gap-2 text-[13px] text-slate-500 hover:text-slate-800 transition-colors">
+              <i class="fa-regular fa-envelope text-slate-400 text-[12px]"></i>
+              recruwise&#64;gmail.com
+            </a>
+            <a href="tel:+21671893350"
+               class="flex items-center gap-2 text-[13px] text-slate-500 hover:text-slate-800 transition-colors">
+              <i class="fa-solid fa-phone text-slate-400 text-[12px]"></i>
+              (+216) 28 102 107
+            </a>
+          </div>
+          <div class="flex items-center gap-3.5 mt-1">
+            <a href="#" class="text-slate-400 hover:text-slate-700 transition-colors text-[15px]"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#" class="text-slate-400 hover:text-slate-700 transition-colors text-[15px]"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="text-slate-400 hover:text-slate-700 transition-colors text-[15px]"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#" class="text-slate-400 hover:text-slate-700 transition-colors text-[15px]"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="#" class="text-slate-400 hover:text-slate-700 transition-colors text-[15px]"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <!-- Col 2: Quick Links -->
+        <div class="flex flex-col gap-4">
+          <h4 class="text-[13px] font-semibold text-slate-900 uppercase tracking-[0.07em]">Quick Links</h4>
+          <ul class="flex flex-col gap-2.5">
+            <li><a routerLink="/home"   class="text-[13px] text-slate-500 hover:text-slate-900 transition-colors">Home</a></li>
+            <li><a routerLink="/jobs"   class="text-[13px] text-slate-500 hover:text-slate-900 transition-colors">Job Listings</a></li>
+            <li><a routerLink="/jobs"   class="text-[13px] text-slate-500 hover:text-slate-900 transition-colors">Advanced Search</a></li>
+            <li><a routerLink="/about"  class="text-[13px] text-slate-500 hover:text-slate-900 transition-colors">About</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Candidates -->
+        <div class="flex flex-col gap-4">
+          <h4 class="text-[13px] font-semibold text-slate-900 uppercase tracking-[0.07em]">Candidates</h4>
+          <ul class="flex flex-col gap-2.5">
+            <li><a routerLink="/login"                          class="text-[13px] text-slate-500 hover:text-slate-900 transition-colors">Sign In</a></li>
+            <li><a routerLink="/registerCandidate"                       class="text-[13px] text-slate-500 hover:text-slate-900 transition-colors">Register</a></li>
+            <li><a routerLink="/candidate/candidate-dashboard"  class="text-[13px] text-slate-500 hover:text-slate-900 transition-colors">My Applications</a></li>
+            <li><a routerLink="/contact"                          class="text-[13px] text-slate-500 hover:text-slate-900 transition-colors">Need Help?</a></li>
+            <li><a routerLink="/contact"                          class="text-[13px] text-slate-500 hover:text-slate-900 transition-colors">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Recruiters -->
+        <div class="flex flex-col gap-4">
+          <h4 class="text-[13px] font-semibold text-slate-900 uppercase tracking-[0.07em]">Recruiters</h4>
+          <ul class="flex flex-col gap-2.5">
+            <li><a routerLink="/login"              class="text-[13px] text-slate-500 hover:text-slate-900 transition-colors">Sign In</a></li>
+            <li><a routerLink="/register"                       class="text-[13px] text-slate-500 hover:text-slate-900 transition-colors">Register</a></li>
+            <li><a routerLink="/recruiter/post-job" class="text-[13px] text-slate-500 hover:text-slate-900 transition-colors">Post a Job</a></li>
+            <li><a routerLink="/recruiter/dashboard" class="text-[13px] text-slate-500 hover:text-slate-900 transition-colors">Search CVs</a></li>
+            <li><a routerLink="/contact"              class="text-[13px] text-slate-500 hover:text-slate-900 transition-colors">Contact Us</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-3">
+        <p class="text-[12.5px] text-slate-400">© 2026 RecruWise. All rights reserved.</p>
+        <div class="flex items-center gap-5 text-[12.5px] text-slate-400">
+          <a href="#" class="hover:text-slate-700 transition-colors">Privacy Policy</a>
+          <a href="#" class="hover:text-slate-700 transition-colors">Terms of Use</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+</div>

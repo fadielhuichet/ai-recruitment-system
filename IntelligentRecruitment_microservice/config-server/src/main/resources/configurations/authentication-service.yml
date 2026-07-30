@@ -1,0 +1,36 @@
+spring:
+  #email config
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: fadi.belhuichet@gmail.com
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+app:
+  contact:
+    to: fadi.belhuichet@gmail.com
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 86400000
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
+server:
+  port: 8083
+
+file:
+  upload-dir: /app/uploads/cvs

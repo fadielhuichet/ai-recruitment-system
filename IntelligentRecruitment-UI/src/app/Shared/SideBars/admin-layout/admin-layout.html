@@ -1,0 +1,163 @@
+<!-- Main Admin Layout Wrapper -->
+<div class="flex h-screen bg-slate-50 font-sans overflow-hidden text-slate-800">
+
+  <!-- Admin Sidebar -->
+  <div class="bg-white border-r border-slate-200 flex flex-col transition-all duration-300 ease-in-out relative z-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)]"
+       [ngClass]="{'w-64': !isCollapsed, 'w-20': isCollapsed}">
+
+    <!-- Header / Logo Area -->
+    <div class="h-16 flex items-center px-4 border-b border-slate-100 shrink-0 transition-all overflow-hidden"
+         [ngClass]="{'justify-between': !isCollapsed, 'justify-center': isCollapsed}">
+
+      <div class="flex items-center gap-3">
+        <!-- Monogram -->
+        <div class="w-9 h-9 rounded-lg bg-slate-900 flex items-center justify-center
+              shrink-0 shadow-lg ring-1 ring-slate-700">
+          <span class="text-sm font-black text-white tracking-tighter">AD</span>
+        </div>
+
+        <!-- Text -->
+        <div *ngIf="!isCollapsed" class="flex items-baseline gap-1.5">
+          <span class="text-[17px] font-black text-slate-900 tracking-tight">Administrator</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Links -->
+    <nav class="flex-1 p-3 space-y-1.5 overflow-visible mt-2">
+
+      <!-- Section Label (Only visible when expanded) -->
+      <div *ngIf="!isCollapsed" class="px-3 pb-2 pt-1">
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Platform</p>
+      </div>
+
+      <!-- Dashboard -->
+      <a routerLink="/admin/admin-dashboard"
+         routerLinkActive="bg-[#0f766e]/10 text-[#0f766e] font-semibold ring-1 ring-[#0f766e]/20"
+         [routerLinkActiveOptions]="{exact: true}"
+         class="flex items-center px-3 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all group cursor-pointer relative">
+        <div class="w-6 h-6 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-border-all text-[17px] transition-colors group-[.active]:text-[#0f766e] group-hover:text-[#0f766e]"></i>
+        </div>
+        <span class="ml-3 text-sm whitespace-nowrap" *ngIf="!isCollapsed">
+          Overview
+        </span>
+        <!-- Tooltip -->
+        <div *ngIf="isCollapsed"
+             class="absolute left-full ml-3 px-2.5 py-1.5 bg-slate-800 text-white text-xs font-semibold rounded-md shadow-lg opacity-0 invisible -translate-x-2 group-hover:opacity-100 group-hover:visible group-hover:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
+          Overview
+          <div class="absolute top-1/2 -left-1 -translate-y-1/2 border-y-[5px] border-y-transparent border-r-[5px] border-r-slate-800"></div>
+        </div>
+      </a>
+      <a routerLink="/admin/candidates"
+         routerLinkActive="bg-[#0f766e]/10 text-[#0f766e] font-semibold ring-1 ring-[#0f766e]/20"
+         class="flex items-center px-3 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all group cursor-pointer relative">
+        <div class="w-6 h-6 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-users text-[17px] transition-colors group-[.active]:text-[#0f766e] group-hover:text-[#0f766e]"></i>
+        </div>
+        <span class="ml-3 text-sm whitespace-nowrap flex-1" *ngIf="!isCollapsed">
+          Candidates
+        </span>
+        <!-- Tooltip -->
+        <div *ngIf="isCollapsed"
+             class="absolute left-full ml-3 px-2.5 py-1.5 bg-slate-800 text-white text-xs font-semibold rounded-md shadow-lg opacity-0 invisible -translate-x-2 group-hover:opacity-100 group-hover:visible group-hover:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
+          Candidates
+          <div class="absolute top-1/2 -left-1 -translate-y-1/2 border-y-[5px] border-y-transparent border-r-[5px] border-r-slate-800"></div>
+        </div>
+      </a>
+
+      <!-- Recruiters Management -->
+      <a routerLink="/admin/recruiters"
+         routerLinkActive="bg-[#0f766e]/10 text-[#0f766e] font-semibold ring-1 ring-[#0f766e]/20"
+         class="flex items-center px-3 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all group cursor-pointer relative">
+        <div class="w-6 h-6 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-users-gear text-[17px] transition-colors group-[.active]:text-[#0f766e] group-hover:text-[#0f766e]"></i>
+        </div>
+        <span class="ml-3 text-sm whitespace-nowrap flex-1" *ngIf="!isCollapsed">
+          Recruiters
+        </span>
+        <!-- Tooltip -->
+        <div *ngIf="isCollapsed"
+             class="absolute left-full ml-3 px-2.5 py-1.5 bg-slate-800 text-white text-xs font-semibold rounded-md shadow-lg opacity-0 invisible -translate-x-2 group-hover:opacity-100 group-hover:visible group-hover:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
+          Recruiters
+          <div class="absolute top-1/2 -left-1 -translate-y-1/2 border-y-[5px] border-y-transparent border-r-[5px] border-r-slate-800"></div>
+        </div>
+      </a>
+
+      <!-- Jobs Management -->
+      <a routerLink="/admin/admin-jobs"
+         routerLinkActive="bg-[#0f766e]/10 text-[#0f766e] font-semibold ring-1 ring-[#0f766e]/20"
+         class="flex items-center px-3 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all group cursor-pointer relative">
+        <div class="w-6 h-6 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-briefcase text-[17px] transition-colors group-[.active]:text-[#0f766e] group-hover:text-[#0f766e]"></i>
+        </div>
+        <span class="ml-3 text-sm whitespace-nowrap" *ngIf="!isCollapsed">
+          All Jobs
+        </span>
+        <!-- Tooltip -->
+        <div *ngIf="isCollapsed"
+             class="absolute left-full ml-3 px-2.5 py-1.5 bg-slate-800 text-white text-xs font-semibold rounded-md shadow-lg opacity-0 invisible -translate-x-2 group-hover:opacity-100 group-hover:visible group-hover:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
+          All Jobs
+          <div class="absolute top-1/2 -left-1 -translate-y-1/2 border-y-[5px] border-y-transparent border-r-[5px] border-r-slate-800"></div>
+        </div>
+      </a>
+      <a routerLink="/admin/applications"
+         routerLinkActive="bg-[#0f766e]/10 text-[#0f766e] font-semibold ring-1 ring-[#0f766e]/20"
+         class="flex items-center px-3 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all group cursor-pointer relative">
+        <div class="w-6 h-6 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-layer-group text-[17px] transition-colors group-[.active]:text-[#0f766e] group-hover:text-[#0f766e]"></i>
+        </div>
+        <span class="ml-3 text-sm whitespace-nowrap" *ngIf="!isCollapsed">
+          Applications
+        </span>
+        <!-- Tooltip -->
+        <div *ngIf="isCollapsed"
+             class="absolute left-full ml-3 px-2.5 py-1.5 bg-slate-800 text-white text-xs font-semibold rounded-md shadow-lg opacity-0 invisible -translate-x-2 group-hover:opacity-100 group-hover:visible group-hover:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
+          Applications
+          <div class="absolute top-1/2 -left-1 -translate-y-1/2 border-y-[5px] border-y-transparent border-r-[5px] border-r-slate-800"></div>
+        </div>
+      </a>
+
+    </nav>
+
+    <!-- Bottom Actions / Collapse Toggle -->
+    <div class="p-3 border-t border-slate-100 bg-slate-50/50">
+
+      <!-- Collapse Menu Button -->
+      <button (click)="isCollapsed = !isCollapsed"
+              class="flex items-center px-3 py-3 w-full rounded-xl text-slate-400 hover:bg-white hover:text-slate-700 hover:shadow-sm border border-transparent hover:border-slate-200 transition-all group cursor-pointer relative"
+              [ngClass]="{'justify-center': isCollapsed}">
+        <div class="w-6 h-6 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-chevron-left text-[14px] transition-transform duration-300"
+             [class.rotate-180]="isCollapsed"></i>
+        </div>
+        <span class="ml-3 text-[13px] font-semibold whitespace-nowrap" *ngIf="!isCollapsed">
+          Collapse
+        </span>
+        <!-- Tooltip -->
+        <div *ngIf="isCollapsed"
+             class="absolute left-full ml-3 px-2.5 py-1.5 bg-slate-800 text-white text-xs font-semibold rounded-md shadow-lg opacity-0 invisible -translate-x-2 group-hover:opacity-100 group-hover:visible group-hover:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
+          Expand Menu
+          <div class="absolute top-1/2 -left-1 -translate-y-1/2 border-y-[5px] border-y-transparent border-r-[5px] border-r-slate-800"></div>
+        </div>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="flex-1 flex flex-col overflow-hidden relative">
+
+    <!-- Admin Header Component -->
+    <!-- Assuming you have a dedicated admin header, or re-using app-header -->
+    <app-header></app-header>
+
+    <!-- Routing Content -->
+    <main class="flex-1 overflow-y-auto bg-slate-50/50 p-6 md:p-8">
+      <!-- Routed Admin Components render here -->
+
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+</div>

@@ -1,0 +1,245 @@
+<app-header></app-header>
+
+<div class="bg-white border-b border-slate-200 px-6 py-12 lg:py-16">
+  <div class="max-w-6xl mx-auto text-center">
+    <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+      Find your next <span class="text-[#0f766e] relative">
+        opportunity
+        <svg class="absolute w-full h-3 -bottom-1 left-0 text-teal-200 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
+          <path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="8" fill="transparent"/>
+        </svg>
+      </span>
+    </h1>
+    <p class="text-slate-500 font-medium text-lg mt-4">
+      Explore {{ openJobs$ | async }} open roles at top companies
+    </p>
+
+    <div class="max-w-4xl mx-auto mt-10 bg-white p-3 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 flex flex-col md:flex-row gap-3">
+
+      <div class="flex-1 flex items-center gap-3 bg-slate-50 hover:bg-slate-100 focus-within:bg-white focus-within:ring-2 focus-within:ring-[#0f766e] focus-within:border-transparent rounded-xl px-4 py-3 transition-all border border-slate-200">
+        <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+        <input type="text"
+               placeholder="Job title, keywords, or company"
+               [(ngModel)]="searchTitle"
+               class="bg-transparent text-slate-900 font-semibold placeholder:text-slate-400
+              placeholder:font-medium outline-none w-full text-base"/>
+      </div>
+
+      <div class="flex-1 flex items-center gap-3 bg-slate-50 hover:bg-slate-100 focus-within:bg-white focus-within:ring-2 focus-within:ring-[#0f766e] focus-within:border-transparent rounded-xl px-4 py-3 transition-all border border-slate-200">
+        <i class="fa-solid fa-location-dot text-slate-400"></i>
+        <input type="text"
+               placeholder="Location"
+               [(ngModel)]="searchLocation"
+               class="bg-transparent text-slate-900 font-semibold placeholder:text-slate-400
+              placeholder:font-medium outline-none w-full text-base"/>
+      </div>
+
+      <button (click)="onSearch()"
+              class="bg-[#0f766e] hover:bg-[#0d6460] text-white font-bold px-10 py-3
+               rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95
+               text-base w-full md:w-auto">
+        Search
+      </button>
+    </div>
+
+    <div class="flex flex-wrap justify-center gap-2 mt-6 max-w-3xl mx-auto">
+      <span *ngFor="let chip of filterChips"
+            (click)="selectChip(chip)"
+            [class.bg-[#0f766e]]="chip.active"
+            [class.border-[#0f766e]]="chip.active"
+            [class.text-white]="chip.active"
+            [class.bg-white]="!chip.active"
+            class="px-5 py-2 rounded-full text-[13px] font-bold border border-slate-200
+                   text-slate-600 cursor-pointer transition-all hover:border-[#0f766e] hover:text-[#0f766e] shadow-sm">
+        {{ chip.label }}
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="bg-[#f8fafc] min-h-screen pb-16">
+  <div class="max-w-6xl mx-auto flex gap-8 px-6 pt-10">
+
+    <!-- Sidebar -->
+    <aside class="w-64 flex-shrink-0 hidden lg:block">
+      <div class="sticky top-6">
+
+        <div class="flex items-center gap-2.5 mb-6 px-2 pb-4 border-b border-slate-200">
+          <div class="w-8 h-8 rounded-lg bg-[#0f766e]/10 flex items-center justify-center text-[#0f766e]">
+            <i class="fa-solid fa-layer-group text-sm"></i>
+          </div>
+          <h3 class="text-lg font-black text-slate-900 tracking-tight">Categories</h3>
+        </div>
+
+        <ng-container *ngFor="let group of categoryGroups">
+
+          <p class="text-xs font-black text-slate-800 tracking-widest uppercase mb-3 mt-8 first:mt-0 px-2 flex items-center gap-3 after:content-[''] after:flex-1 after:h-px after:bg-slate-200">
+            {{ group.groupLabel }}
+          </p>
+
+          <nav class="space-y-1 mb-1">
+            <div *ngFor="let cat of group.categories"
+                 (click)="selectCategory(cat)"
+                 class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13.5px]
+                        font-semibold text-slate-600 hover:bg-white hover:shadow-sm hover:text-[#0f766e]
+                        cursor-pointer transition-all group border border-transparent"
+                 [class.!bg-teal-50]="selectedCategory?.value === cat.value"
+                 [class.!text-[#0f766e]]="selectedCategory?.value === cat.value"
+                 [class.!border-teal-100]="selectedCategory?.value === cat.value"
+                 [class.!font-bold]="selectedCategory?.value === cat.value">
+
+              <span>{{ cat.label }}</span>
+
+              <i class="fa-solid fa-chevron-right text-[10px] transition-all duration-200"
+                 [class.opacity-100]="selectedCategory?.value === cat.value"
+                 [class.translate-x-1]="selectedCategory?.value === cat.value"
+                 [class.opacity-0]="selectedCategory?.value !== cat.value"
+                 [class.-translate-x-2]="selectedCategory?.value !== cat.value"
+                 [class.group-hover:opacity-100]="selectedCategory?.value !== cat.value"
+                 [class.group-hover:translate-x-0]="selectedCategory?.value !== cat.value"></i>
+            </div>
+          </nav>
+
+        </ng-container>
+      </div>
+    </aside>
+
+    <main class="flex-1">
+      <div class="flex flex-wrap items-center justify-between mb-6 gap-4">
+        <h2 class="text-xl font-black text-slate-900">
+          Recommended Jobs <span class="text-slate-400 font-medium text-base font-normal ml-2">({{ openJobs$ | async }})</span>
+        </h2>
+        <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
+          <i class="fa-solid fa-arrow-down-a-z text-slate-400 text-sm"></i>
+          <select class="text-sm font-bold text-slate-700 bg-transparent outline-none cursor-pointer">
+            <option>Most recent</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Job List -->
+      <div class="space-y-4">
+        <div *ngIf="loading" class="flex justify-center py-20">
+          <div class="w-8 h-8 border-4 border-teal-200 border-t-[#0f766e] rounded-full animate-spin"></div>
+        </div>
+
+        <ng-container *ngIf="!loading">
+          <div *ngFor="let job of jobs"
+               class="group bg-white rounded-2xl p-6 transition-all duration-300
+                      shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.08)]
+                      cursor-pointer relative overflow-hidden flex flex-col sm:flex-row gap-6 hover:-translate-y-0.5">
+
+            <!-- Elegant accent line that appears on hover -->
+            <div class="absolute left-0 top-0 bottom-0 w-1 bg-[#0f766e] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+            <!-- Avatar (No Border) -->
+            <div class="w-14 h-14 rounded-xl bg-slate-50 flex items-center justify-center text-slate-600 font-black text-xl flex-shrink-0 group-hover:bg-[#0f766e]/5 group-hover:text-[#0f766e] transition-colors">
+              {{ job.company?.charAt(0) }}
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+                <div>
+                  <h3 class="text-lg font-bold text-slate-900 leading-tight group-hover:text-[#0f766e] transition-colors">
+                    {{ job.title }}
+                  </h3>
+                  <p class="text-sm font-semibold text-slate-500 mt-1">{{ job.company }}</p>
+
+                </div>
+               <span class="hidden md:inline-block  text-xs font-semibold px-2.5 py-1 rounded-md"
+               [ngClass]="{
+               'text-green-500 bg-green-50':job.status==='ACTIVE',
+               'text-red-500 bg-red-50':job.status==='CLOSED'
+               }">
+                  {{job.status}}
+                </span>
+
+              </div>
+
+              <div class="text-[14px] text-slate-500 line-clamp-2 leading-relaxed max-w-3xl">
+                <div [innerHTML]="getSafeHtml(job.description)"></div>
+              </div>
+
+              <!-- Meta Footer (Clean typography, no borders) -->
+              <div class="flex flex-wrap items-center justify-between mt-5 gap-4 pt-4 border-t border-slate-100">
+                <div class="flex flex-wrap items-center gap-3 text-xs font-medium text-slate-500">
+                  <div class="flex items-center gap-1.5">
+                    <i class="fa-solid fa-location-dot text-slate-400"></i>
+                    <span>{{ job.location }}</span>
+                  </div>
+                  <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                  <div class="flex items-center gap-1.5">
+                    <i class="fa-regular fa-clock text-slate-400"></i>
+                    <span>{{ job.createdAt ? (job.createdAt | date:'mediumDate') : '' }}</span>
+                  </div>
+                  <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                  <div class="flex items-center gap-1.5 text-[#0f766e] font-semibold">
+                    <i class="fa-solid fa-fire"></i>
+                    <span>{{ applicantCounts[job.id] ?? 0 }} Applicants</span>
+                  </div>
+                </div>
+
+                <!-- Sleek Ghost Button -->
+                <button (click)="viewJobDetails(job)"
+                        class="flex-1 md:flex-none text-[#0f766e] text-sm font-bold transition-all
+                               flex items-center justify-center gap-2 border-none bg-transparent cursor-pointer">
+                  View Details
+                  <i class="fa-solid fa-arrow-right text-[11px] transform group-hover:translate-x-1 transition-transform"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="totalPages > 1" class="flex items-center justify-center gap-2 mt-10">
+
+        <!-- Previous -->
+        <button (click)="goToPage(currentPage - 1)"
+                [disabled]="currentPage === 0"
+                class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold
+                 border-2 border-slate-200 text-slate-500 bg-white transition-all
+                 hover:border-[#0f766e] hover:text-[#0f766e] disabled:opacity-30
+                 disabled:cursor-not-allowed disabled:hover:border-slate-200
+                 disabled:hover:text-slate-500">
+          <i class="fa-solid fa-chevron-left text-[11px]"></i>
+          Previous
+        </button>
+
+        <!-- Page numbers -->
+        <ng-container *ngFor="let page of pages">
+          <button (click)="goToPage(page)"
+                  [class.bg-[#0f766e]]="page === currentPage"
+                  [class.text-white]="page === currentPage"
+                  [class.border-[#0f766e]]="page === currentPage"
+                  [class.bg-white]="page !== currentPage"
+                  [class.text-slate-600]="page !== currentPage"
+                  class="w-10 h-10 rounded-xl text-sm font-bold border-2 border-slate-200
+                   transition-all hover:border-[#0f766e] hover:text-[#0f766e]">
+            {{ page + 1 }}
+          </button>
+        </ng-container>
+
+        <!-- Next -->
+        <button (click)="goToPage(currentPage + 1)"
+                [disabled]="currentPage === totalPages - 1"
+                class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold
+                 border-2 border-slate-200 text-slate-500 bg-white transition-all
+                 hover:border-[#0f766e] hover:text-[#0f766e] disabled:opacity-30
+                 disabled:cursor-not-allowed disabled:hover:border-slate-200
+                 disabled:hover:text-slate-500">
+          Next
+          <i class="fa-solid fa-chevron-right text-[11px]"></i>
+        </button>
+
+      </div>
+
+      <!-- Result count -->
+      <p class="text-center text-xs text-slate-400 font-medium mt-4">
+        Showing {{ currentPage * pageSize + 1 }}–{{ Math.min((currentPage + 1) * pageSize, totalElements) }}
+        of {{ totalElements }} jobs
+      </p>
+    </main>
+  </div>
+</div>

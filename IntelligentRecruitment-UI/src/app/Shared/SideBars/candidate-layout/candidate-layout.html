@@ -1,0 +1,106 @@
+<!-- Main Layout Wrapper -->
+<div class="flex h-screen bg-slate-50 font-sans overflow-hidden text-slate-800">
+
+  <!-- Sidebar -->
+  <div class="bg-white border-r border-slate-200 flex flex-col transition-all duration-300 ease-in-out relative z-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)]"
+       [ngClass]="{'w-64': !isCollapsed, 'w-20': isCollapsed}">
+
+    <!-- Header / Logo Area -->
+    <div class="h-16 flex items-center px-4 border-b border-slate-100 shrink-0 transition-all overflow-hidden"
+         [ngClass]="{'justify-between': !isCollapsed, 'justify-center': isCollapsed}">
+
+      <div class="flex items-center gap-3">
+        <!-- Icon Logo (Candidate Icon) -->
+        <div class="w-10 h-10 rounded-xl bg-[#0f766e]/10 flex items-center justify-center text-[#0f766e] shrink-0">
+          <i class="fa-solid fa-user-graduate text-lg"></i>
+        </div>
+
+        <!-- Text Logo -->
+        <span class="font-black text-slate-900 text-lg tracking-tight whitespace-nowrap transition-opacity duration-300"
+              *ngIf="!isCollapsed">
+          Candidate
+        </span>
+      </div>
+    </div>
+
+    <!-- Navigation Links -->
+    <nav class="flex-1 p-3 space-y-1.5 overflow-visible">
+
+      <!-- Overview -->
+      <a routerLink="/candidate/candidate-dashboard"
+         routerLinkActive="bg-[#0f766e]/10 text-[#0f766e] font-semibold"
+         [routerLinkActiveOptions]="{exact: true}"
+         class="flex items-center px-3 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all group cursor-pointer relative">
+        <div class="w-6 h-6 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-border-all text-[17px] transition-colors group-hover:text-[#0f766e]"></i>
+        </div>
+        <span class="ml-3 text-sm whitespace-nowrap" *ngIf="!isCollapsed">
+          Overview
+        </span>
+        <!-- Tooltip -->
+        <div *ngIf="isCollapsed"
+             class="absolute left-full ml-3 px-2.5 py-1.5 bg-slate-800 text-white text-xs font-semibold rounded-md shadow-lg opacity-0 invisible -translate-x-2 group-hover:opacity-100 group-hover:visible group-hover:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
+          Overview
+          <div class="absolute top-1/2 -left-1 -translate-y-1/2 border-y-[5px] border-y-transparent border-r-[5px] border-r-slate-800"></div>
+        </div>
+      </a>
+
+      <!-- My Applications -->
+      <a routerLink="/candidate/my-application"
+         routerLinkActive="bg-[#0f766e]/10 text-[#0f766e] font-semibold"
+         class="flex items-center px-3 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all group cursor-pointer relative">
+        <div class="w-6 h-6 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-file-lines text-[17px] transition-colors group-hover:text-[#0f766e]"></i>
+        </div>
+        <span class="ml-3 text-sm whitespace-nowrap" *ngIf="!isCollapsed">
+          My Applications
+        </span>
+        <!-- Tooltip -->
+        <div *ngIf="isCollapsed"
+             class="absolute left-full ml-3 px-2.5 py-1.5 bg-slate-800 text-white text-xs font-semibold rounded-md shadow-lg opacity-0 invisible -translate-x-2 group-hover:opacity-100 group-hover:visible group-hover:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
+          My Applications
+          <div class="absolute top-1/2 -left-1 -translate-y-1/2 border-y-[5px] border-y-transparent border-r-[5px] border-r-slate-800"></div>
+        </div>
+      </a>
+
+      <!-- Browse Jobs (Recommended Addition!) -->
+
+
+    </nav>
+
+    <!-- Collapse Toggle Button (Bottom) -->
+    <div class="p-3 border-t border-slate-100">
+      <button (click)="isCollapsed = !isCollapsed"
+              class="flex items-center px-3 py-3 w-full rounded-xl text-slate-400 hover:bg-slate-50 hover:text-slate-700 transition-all group cursor-pointer border-none bg-transparent relative"
+              [ngClass]="{'justify-center': isCollapsed}">
+        <div class="w-6 h-6 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-chevron-left text-[15px] transition-transform duration-300"
+             [class.rotate-180]="isCollapsed"></i>
+        </div>
+        <span class="ml-3 text-sm font-medium whitespace-nowrap" *ngIf="!isCollapsed">
+          Collapse Menu
+        </span>
+        <!-- Tooltip -->
+        <div *ngIf="isCollapsed"
+             class="absolute left-full ml-3 px-2.5 py-1.5 bg-slate-800 text-white text-xs font-semibold rounded-md shadow-lg opacity-0 invisible -translate-x-2 group-hover:opacity-100 group-hover:visible group-hover:translate-x-0 transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
+          Expand Menu
+          <div class="absolute top-1/2 -left-1 -translate-y-1/2 border-y-[5px] border-y-transparent border-r-[5px] border-r-slate-800"></div>
+        </div>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="flex-1 flex flex-col overflow-hidden relative">
+
+    <!-- Header -->
+    <app-header></app-header>
+
+    <!-- Routing Content -->
+    <main class="flex-1 overflow-y-auto p-8">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+
+</div>

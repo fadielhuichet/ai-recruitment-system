@@ -1,0 +1,245 @@
+<app-header></app-header>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+
+<style>
+  .font-serif-display { font-family: 'Instrument Serif', serif; }
+  .font-dm { font-family: 'DM Sans', sans-serif; }
+  .topbar-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .toast-slide { animation: toastIn 0.2s ease; }
+  @keyframes toastIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+  .job-description { font-weight: 300; }
+</style>
+
+<div class="bg-[#f8fafa] min-h-screen pb-20 font-dm" style="font-family:'DM Sans',sans-serif">
+
+  <!-- Top bar -->
+  <div class="bg-white/90 topbar-blur border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-6 h-[52px] flex items-center justify-between">
+      <button (click)="router.navigate(['/jobs'])"
+              class="flex items-center gap-2 text-slate-400 hover:text-slate-800
+                     transition-colors rounded-md px-2 py-1.5 text-[13px]
+                     font-medium border-none bg-transparent cursor-pointer hover:bg-slate-50">
+        <i class="fa-solid fa-arrow-left text-[10px]"></i>
+        Back to Search
+      </button>
+    </div>
+  </div>
+
+  <!-- Spinner -->
+  <div *ngIf="loading" class="flex items-center justify-center py-40">
+    <div class="w-7 h-7 border-2 border-slate-200 border-t-[#0f766e]
+                rounded-full animate-spin"></div>
+  </div>
+
+  <!-- Success Toast -->
+  <div *ngIf="submitSuccess"
+       class="toast-slide fixed top-[66px] right-5 z-[60] bg-white border border-slate-200
+              shadow-[0_4px_20px_rgba(0,0,0,0.08)] rounded-xl px-4 py-3 flex items-start gap-3 min-w-[240px]">
+    <div class="w-[30px] h-[30px] rounded-full bg-emerald-50 text-emerald-600
+                flex items-center justify-center shrink-0 text-[13px]">
+      <i class="fa-solid fa-circle-check"></i>
+    </div>
+    <div>
+      <p class="text-[13px] font-semibold text-slate-800 leading-none mb-1">Application sent</p>
+      <p class="text-[12px] text-slate-500">Your application was submitted successfully.</p>
+    </div>
+  </div>
+
+  <!-- Error Toast -->
+  <div *ngIf="submitError"
+       class="toast-slide fixed top-[66px] right-5 z-[60] bg-white border border-slate-200
+              shadow-[0_4px_20px_rgba(0,0,0,0.08)] rounded-xl px-4 py-3 flex items-start gap-3 min-w-[240px]">
+    <div class="w-[30px] h-[30px] rounded-full bg-rose-50 text-rose-500
+                flex items-center justify-center shrink-0 text-[13px]">
+      <i class="fa-solid fa-circle-exclamation"></i>
+    </div>
+    <div>
+      <p class="text-[13px] font-semibold text-slate-800 leading-none mb-1">Submission failed</p>
+      <p class="text-[12px] text-slate-500">{{ errorMsg || 'Please try again later.' }}</p>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!loading && job">
+    <div class="max-w-5xl mx-auto px-6 pt-8">
+
+      <!-- Hero Header -->
+      <div class="bg-white border border-slate-200 rounded-[10px] p-8 mb-5
+                  flex flex-col md:flex-row gap-6 items-start">
+
+        <!-- Company Mark -->
+        <div class="w-[52px] h-[52px] rounded-lg border border-slate-200 bg-slate-50
+                    flex items-center justify-center text-slate-800
+                    text-[22px] flex-shrink-0 font-serif-display"
+             style="font-family:'Instrument Serif',serif">
+          {{ job.company?.charAt(0) }}
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+            <div>
+              <!-- Job Title -->
+              <h1 class="text-[26px] font-normal text-slate-900 tracking-tight mb-2.5 leading-[1.25]
+                         "
+                  style="letter-spacing:-0.02em">
+                {{ job.title }}
+              </h1>
+
+              <!-- Meta row -->
+              <div class="flex flex-wrap items-center gap-x-3.5 gap-y-1.5 text-[13px] text-slate-500">
+                <span class="font-medium text-slate-800 flex items-center gap-1.5">
+                  <i class="fa-regular fa-building text-slate-400 text-[11px]"></i>
+                  {{ job.company }}
+                </span>
+                <span class="text-slate-200 text-base">·</span>
+                <span class="flex items-center gap-1.5">
+                  <i class="fa-solid fa-location-dot text-slate-400 text-[11px]"></i>
+                  {{ job.location }}
+                </span>
+                <span class="text-slate-200 text-base">·</span>
+                <span class="flex items-center gap-1.5">
+                  <i class="fa-regular fa-clock text-slate-400 text-[11px]"></i>
+                  Posted {{ job.createdAt ? (job.createdAt | date:'mediumDate') : '' }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Badges -->
+          <div class="flex flex-wrap gap-2 mt-5 pt-4 border-t border-slate-100">
+
+            <span *ngIf="job.category"
+                  class="text-[11.5px] font-medium px-2.5 py-1 rounded-[5px]
+                         bg-slate-50 text-slate-500 border border-slate-200 tracking-wide">
+              {{ job.category?.label }}
+            </span>
+
+            <span class="text-[11.5px] font-medium px-2.5 py-1 rounded-[5px] border
+                         flex items-center gap-1.5 tracking-wide"
+                  [ngClass]="{
+                    'text-emerald-600 bg-emerald-50 border-emerald-200': job.status === 'ACTIVE',
+                    'text-red-500 bg-red-50 border-red-200': job.status === 'CLOSED'
+                  }">
+              <i class="fa-solid fa-circle text-[6px]"></i>
+              {{ job.status }}
+            </span>
+
+            <span class="text-[11.5px] font-medium px-2.5 py-1 rounded-[5px]
+                         bg-[#0f766e]/[0.07] text-[#0f766e] border border-[#0f766e]/20
+                         flex items-center gap-1.5 tracking-wide">
+              <i class="fa-solid fa-fire text-[9px]"></i>
+              {{ applicantCount }} Applicants
+            </span>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Layout Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+        <!-- Left: Job Description -->
+        <div class="lg:col-span-2">
+          <div class="bg-white  border-slate-200 rounded-[10px] overflow-hidden">
+            <div class="px-7 py-4 border-b border-slate-100">
+              <h2 class="text-[11.5px] font-semibold text-slate-800 uppercase tracking-[0.07em]">
+                About the Role
+              </h2>
+            </div>
+            <div class="px-7 py-6">
+              <div class="job-description text-[14.5px] text-slate-600 leading-relaxed font-normal">
+                <div [innerHTML]="job.description"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Sidebar -->
+        <div class="lg:col-span-1 flex flex-col gap-4">
+
+          <!-- Apply Card -->
+          <div class="bg-white border border-slate-200 rounded-[10px] p-5">
+            <button
+              [disabled]="job.status === 'CLOSED'"
+              (click)="onSubmit(job)"
+              class="w-full bg-[#0f766e] hover:bg-[#0d6460] text-white text-[13.5px]
+                     font-medium py-3 rounded-[7px] transition-colors flex items-center
+                     justify-center gap-2 cursor-pointer border-none tracking-[0.01em]
+                     disabled:opacity-40 disabled:cursor-not-allowed">
+              Apply for this Job
+            </button>
+
+            <div class="mt-3.5 flex items-center justify-center gap-1.5
+                        text-[11.5px] font-medium text-slate-400 tracking-[0.02em]">
+              <i class="fa-solid fa-shield-halved text-[#0f766e] text-[11px]"></i>
+              Verified Opportunity
+            </div>
+          </div>
+
+          <!-- Job Overview Card -->
+          <div class="bg-white border border-slate-200 rounded-[10px] overflow-hidden">
+            <div class="px-[22px] py-4 border-b border-slate-100">
+              <h3 class="text-[11.5px] font-semibold text-slate-800 uppercase tracking-[0.07em]">
+                Job Overview
+              </h3>
+            </div>
+
+            <!-- Row: Date Posted -->
+            <div class="flex items-center justify-between px-[22px] py-3
+                        border-b border-slate-100 text-[13px]">
+              <span class="flex items-center gap-2.5 text-slate-500">
+                <i class="fa-regular fa-calendar w-3.5 text-center text-slate-400 text-[11px]"></i>
+                Date Posted
+              </span>
+              <span class="font-medium text-slate-800">
+                {{ job.createdAt ? (job.createdAt | date:'mediumDate') : 'Not specified' }}
+              </span>
+            </div>
+
+            <!-- Row: Category -->
+            <div class="flex items-center justify-between px-[22px] py-3
+                        border-b border-slate-100 text-[13px]">
+              <span class="flex items-center gap-2.5 text-slate-500">
+                <i class="fa-solid fa-layer-group w-3.5 text-center text-slate-400 text-[11px]"></i>
+                Category
+              </span>
+              <span class="font-medium text-slate-800">
+                {{ job.category?.label ?? 'Not specified' }}
+              </span>
+            </div>
+
+            <!-- Row: Applicants -->
+            <div class="flex items-center justify-between px-[22px] py-3 text-[13px]">
+              <span class="flex items-center gap-2.5 text-slate-500">
+                <i class="fa-solid fa-users w-3.5 text-center text-slate-400 text-[11px]"></i>
+                Applicants
+              </span>
+              <span class="font-medium text-slate-800">
+                {{ applicantCount }} Candidates
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Error / Not Found State -->
+  <div *ngIf="!loading && !job"
+       class="flex flex-col items-center justify-center py-32 gap-4">
+    <div class="w-14 h-14 rounded-full bg-slate-100 border border-slate-200
+                flex items-center justify-center">
+      <i class="fa-solid fa-magnifying-glass text-slate-400 text-lg"></i>
+    </div>
+    <p class="text-[14px] text-slate-500 font-medium">Job not found or is no longer available.</p>
+    <button (click)="router.navigate(['/jobs'])"
+            class="text-[#0f766e] text-[13.5px] font-medium hover:underline
+                   bg-transparent border-none cursor-pointer mt-1">
+      Return to job board
+    </button>
+  </div>
+
+</div>

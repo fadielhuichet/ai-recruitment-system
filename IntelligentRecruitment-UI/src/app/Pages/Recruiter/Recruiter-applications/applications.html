@@ -1,0 +1,569 @@
+<div
+  class="flex h-[calc(100vh-64px)] bg-slate-50 font-sans text-slate-800 border-t border-slate-200 overflow-hidden"
+>
+  <!-- =====================================================
+       LEFT PANEL — Open Positions
+       ===================================================== -->
+  <aside class="w-[268px] bg-white border-r border-slate-200 flex flex-col shrink-0">
+    <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between shrink-0">
+      <h2 class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Open Positions</h2>
+      <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+        {{ jobs.length }}
+      </span>
+    </div>
+
+    <nav class="overflow-y-auto flex-1 p-2 space-y-0.5">
+      <div
+        *ngFor="let job of jobs"
+        (click)="selectJob(job.id)"
+        [class.active]="selectedJobId === job.id"
+        class="group relative flex flex-col px-4 py-3 rounded-lg cursor-pointer transition-all duration-150 border border-transparent hover:bg-slate-50 hover:border-slate-200/70 [&.active]:bg-teal-50 [&.active]:border-teal-200/70"
+      >
+        <div
+          class="absolute left-0 inset-y-3 w-[3px] rounded-r-full bg-[#0f766e] opacity-0 group-[.active]:opacity-100 transition-opacity duration-150"
+        ></div>
+
+        <span
+          class="text-[13.5px] font-semibold text-slate-700 leading-snug mb-1.5 group-[.active]:text-[#0a5c47] transition-colors duration-150"
+        >
+          {{ job.title }}
+        </span>
+        <div class="flex items-center gap-2 text-[11px]">
+          <span class="text-slate-400 flex items-center gap-1">
+            <i class="fa-regular fa-calendar text-[10px]"></i>
+            {{ job.createdAt | date:'MMM d, y' }}
+          </span>
+          <span class="text-slate-300">·</span>
+          <span class="font-semibold text-[#0f766e]">
+            {{ applicantsMap[job.id] || 0 }} applicants
+          </span>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- =====================================================
+       MAIN PANEL — Candidate Table
+       ===================================================== -->
+  <main class="flex-1 flex flex-col min-w-0 bg-slate-50 relative">
+    <!-- Empty state: no job selected -->
+    <div *ngIf="!selectedJobId" class="flex-1 flex flex-col items-center justify-center">
+      <div
+        class="w-14 h-14 rounded-2xl bg-white border border-slate-200 flex items-center justify-center mb-4 shadow-sm"
+      >
+        <i class="fa-regular fa-folder-open text-slate-300 text-xl"></i>
+      </div>
+      <p class="text-[14px] font-semibold text-slate-500 mb-1">Select a position</p>
+      <p class="text-[12px] text-slate-400 text-center max-w-[180px] leading-relaxed">
+        Choose a job from the left panel to review its candidates
+      </p>
+    </div>
+
+    <ng-container *ngIf="selectedJobId">
+      <!-- ── Toolbar ── -->
+      <div
+        class="px-6 py-3 bg-white border-b border-slate-200 flex items-center justify-between gap-4 shrink-0"
+      >
+        <!-- Left: select-all + count -->
+        <label class="flex items-center gap-2.5 cursor-pointer select-none shrink-0">
+          <input
+            type="checkbox"
+            #cbAll
+            (change)="toggleSelectAll(cbAll.checked)"
+            class="w-4 h-4 rounded border-slate-300 accent-[#0f766e] cursor-pointer"
+          />
+          <span class="text-[13px] font-semibold text-slate-700">
+            <span class="text-[#0f766e]">{{ applicantsMap[selectedJobId] }}</span> candidates
+          </span>
+        </label>
+
+        <!-- Right: bulk actions when items selected, otherwise search + filter -->
+        <div *ngIf="selectedCount > 0" class="flex items-center gap-2 bulk-bar">
+          <span class="flex items-center gap-2 text-[13px] font-semibold text-slate-600 mr-1">
+            <span
+              class="w-5 h-5 rounded-full bg-[#0f766e] text-white text-[10px] font-bold flex items-center justify-center"
+            >{{ selectedCount }}</span
+            >
+            selected
+          </span>
+          <button (click)="sendAcceptEmail()"
+                  class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[12.5px] font-semibold bg-emerald-600 text-white hover:bg-emerald-700 active:scale-[0.97] transition-all cursor-pointer shadow-sm"
+          >
+            <i class="fa-regular fa-envelope text-[11px]  pt-1"></i> Send Acceptance
+          </button>
+          <button
+            (click)="sendRefusalEmail()"
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[12.5px] font-semibold border border-rose-200 bg-white text-rose-600 hover:bg-rose-50 active:scale-[0.97] transition-all cursor-pointer"
+          >
+            <i class="fa-regular fa-envelope text-[11px] pt-1"></i> Send Refusal
+          </button>
+          <button
+            (click)="clearSelection()"
+            class="px-2.5 py-1.5 text-[12px] text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+          >
+            Clear
+          </button>
+        </div>
+
+        <div *ngIf="selectedCount === 0" class="flex items-center gap-2">
+          <div class="relative">
+            <i
+              class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[11px]"
+            ></i>
+            <input
+              type="text"
+              placeholder="Search candidates…"
+              #searchInput
+              (input)="searchCandidate(searchInput.value)"
+              class="w-52 pl-8 pr-3 py-1.5 text-[13px] border border-slate-200 rounded-lg outline-none focus:border-[#0f766e] focus:ring-1 focus:ring-[#0f766e]/20 placeholder:text-slate-400 bg-white transition-all"
+            />
+          </div>
+          <select
+            class="px-3 py-1.5 text-[13px] border border-slate-200 rounded-lg bg-white outline-none focus:border-[#0f766e] focus:ring-1 focus:ring-[#0f766e]/20 text-slate-600 cursor-pointer"
+            #sortSelect
+            (change)="OnSortChange(sortSelect.value)"
+          >
+            <option value="mostRecent" >Most Recent</option>
+            <option value="scoreDesc">Highest Score</option>
+            <option value="ANALYZED">Analyzed</option>
+            <option value="REVIEWED">Reviewed</option>
+            <option value="ACCEPTED">Accepted</option>
+            <option value="REFUSED">Refused</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- ── Column headers ── -->
+      <div class="flex items-center gap-0 px-6 py-2.5 bg-white border-b border-slate-200 shrink-0 text-[10.5px] font-bold text-slate-400 uppercase tracking-widest">
+        <div class="w-5 shrink-0"></div>
+        <div class="w-4 shrink-0 mr-3"></div>
+        <div class="w-9 shrink-0 mr-3"></div>
+        <div class="flex-1 min-w-0 pr-4">Candidate</div>
+        <div class="w-[120px] shrink-0">Status</div>
+        <div class="w-[180px] shrink-0">AI Match</div>
+        <div class="w-[80px] shrink-0 text-right">Applied</div>
+        <div class="w-[40px] shrink-0"></div> <!-- ← delete column -->
+      </div>
+
+      <!-- ── Candidate rows ── -->
+      <div class="overflow-y-auto flex-1">
+        <div
+          *ngIf="applicants.length === 0"
+          class="flex flex-col items-center justify-center h-40 gap-2"
+        >
+          <p class="text-[13px] text-slate-400 font-medium">No candidates for this position yet.</p>
+        </div>
+
+        <div
+          *ngFor="let applicant of applicants"
+          (click)="selectApplicant(applicant.id)"
+          [class.selected]="selectedApplicantId === applicant.id"
+          class="group flex items-center gap-0 px-6 py-3.5 border-b border-slate-100 cursor-pointer transition-colors duration-100 bg-white hover:bg-slate-50 [&.selected]:bg-teal-50/70 [&.selected]:border-l-2 [&.selected]:border-l-[#0f766e] [&.selected]:pl-[22px]"
+        >
+          <!-- Checkbox -->
+          <div class="w-5 shrink-0 flex items-center">
+            <input
+              type="checkbox"
+              #cb
+              [checked]="isChecked(applicant.id)"
+              (change)="toggleCheck(applicant.id, cb.checked)"
+              (click)="$event.stopPropagation()"
+              class="w-4 h-4 rounded border-slate-300 accent-[#0f766e] cursor-pointer"
+            />
+          </div>
+
+          <!-- Spacer -->
+          <div class="w-4 shrink-0"></div>
+
+          <!-- Avatar -->
+          <div class="w-9 shrink-0 mr-3">
+            <div class="w-9 h-9 rounded-full flex items-center justify-center text-[12.5px] font-bold text-[#0f766e] bg-teal-50 ring-1 ring-teal-100/70">
+              {{ applicant.firstName?.charAt(0)?.toUpperCase() }}{{ applicant.lastName?.charAt(0)?.toUpperCase() }}
+            </div>
+          </div>
+
+          <!-- Name -->
+          <div class="flex-1 min-w-0 pr-4">
+            <p class="text-[13.5px] font-semibold text-slate-800 truncate leading-snug group-hover:text-[#0f766e] group-[.selected]:text-[#0a5c47] transition-colors duration-100">
+              {{ applicant.firstName }} {{ applicant.lastName }}
+            </p>
+          </div>
+
+          <!-- Status -->
+          <div class="w-[120px] shrink-0">
+    <span
+      class="inline-block px-2.5 py-1 rounded-md text-[10.5px] font-bold tracking-wide uppercase [&[data-status='PENDING']]:bg-amber-100 [&[data-status='PENDING']]:text-amber-700 [&[data-status='ANALYZING']]:bg-violet-100 [&[data-status='ANALYZING']]:text-violet-700 [&[data-status='ANALYZED']]:bg-cyan-100 [&[data-status='ANALYZED']]:text-cyan-700 [&[data-status='REVIEWED']]:bg-blue-100 [&[data-status='REVIEWED']]:text-blue-700 [&[data-status='ACCEPTED']]:bg-emerald-100 [&[data-status='ACCEPTED']]:text-emerald-700 [&[data-status='REFUSED']]:bg-rose-100 [&[data-status='REFUSED']]:text-rose-700 bg-slate-100 text-slate-500"
+      [attr.data-status]="applicant.status">
+      {{ applicant.status }}
+    </span>
+          </div>
+
+          <!-- AI Score -->
+          <div class="w-[180px] shrink-0 flex items-center gap-2.5 pr-2">
+            <div class="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+              <div
+                class="h-full rounded-full transition-all duration-500"
+                [style.width.%]="applicant.llmScore"
+                [ngClass]="{
+          'bg-rose-400': applicant.llmScore < 50,
+          'bg-amber-400': applicant.llmScore >= 50 && applicant.llmScore < 75,
+          'bg-[#0f766e]': applicant.llmScore >= 75
+        }">
+              </div>
+            </div>
+            <span
+              class="text-[12px] font-bold w-9 text-right tabular-nums shrink-0"
+              [ngClass]="{
+        'text-rose-500': applicant.llmScore < 50,
+        'text-amber-500': applicant.llmScore >= 50 && applicant.llmScore < 75,
+        'text-[#0f766e]': applicant.llmScore >= 75
+      }">
+      {{ applicant.llmScore }}%
+    </span>
+          </div>
+
+          <!-- Date -->
+          <div class="w-[80px] shrink-0 text-right text-[12px] text-slate-400 tabular-nums">
+            {{ applicant.createdAt | date:'MMM d, HH:mm' }}
+          </div>
+
+          <!-- ← Delete button — always visible, stops row click -->
+          <div class="w-[40px] shrink-0 flex items-center justify-end">
+            <button
+              (click)="showModalDelete(applicant.id); $event.stopPropagation()"
+              title="Delete application"
+              class="w-7 h-7 rounded-lg bg-rose-50 text-rose-400 hover:bg-rose-100 hover:text-rose-600 flex items-center justify-center transition-colors cursor-pointer">
+              <i class="fa-regular fa-trash-can text-[11px]"></i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </ng-container>
+  </main>
+
+  <!-- =====================================================
+       BACKDROP
+       ===================================================== -->
+  <div
+    (click)="closeDrawer()"
+    class="fixed inset-0 z-40 bg-black/20 transition-opacity duration-300"
+    [class.opacity-0]="!drawerOpen"
+    [class.pointer-events-none]="!drawerOpen"
+    [class.opacity-100]="drawerOpen"
+  ></div>
+
+  <!-- =====================================================
+       DRAWER — Candidate Details
+       ===================================================== -->
+  <aside
+    class="fixed inset-y-0 right-0 z-50 w-full md:w-[600px] bg-white border-l border-slate-200/70 shadow-[-12px_0_48px_rgba(0,0,0,0.07)] flex flex-col transition-transform duration-300 ease-in-out overflow-hidden"
+    [ngClass]="drawerOpen ? 'translate-x-0' : 'translate-x-full'"
+  >
+
+    <!-- ── Header ── -->
+    <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-200/70 bg-white shrink-0">
+      <span class="text-[10.5px] font-semibold text-slate-400 uppercase tracking-widest">Candidate Profile</span>
+      <div class="flex items-center gap-1">
+
+        <div class="w-px h-4 bg-slate-200 mx-1"></div>
+        <button
+          (click)="closeDrawer()"
+          class="w-[30px] h-[30px] rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-all cursor-pointer"
+          title="Close"
+        >
+          <i class="fa-solid fa-xmark text-[14px]"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── Loading ── -->
+    <div
+      *ngIf="!application && !drawerError"
+      class="flex-1 flex flex-col items-center justify-center gap-3"
+    >
+      <div class="w-6 h-6 border-[1.5px] border-[#0f766e] border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-[12px] text-slate-400 font-medium">Loading profile…</p>
+    </div>
+
+    <!-- ── Error ── -->
+    <div
+      *ngIf="drawerError"
+      class="flex-1 flex flex-col items-center justify-center gap-4 px-8 text-center"
+    >
+      <div class="w-11 h-11 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center">
+        <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg"></i>
+      </div>
+      <div>
+        <p class="text-[13.5px] font-semibold text-slate-700 mb-1">Could not load profile</p>
+        <p class="text-[12px] text-slate-400">Check your connection and try again.</p>
+      </div>
+      <button
+        (click)="selectApplicant(selectedApplicantId!)"
+        class="px-4 py-2 rounded-lg border border-slate-200 text-[12.5px] font-semibold text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+      >
+        Try Again
+      </button>
+    </div>
+
+    <!-- ── Content ── -->
+    <div *ngIf="application" class="flex-1 overflow-y-auto divide-y divide-slate-100">
+
+      <!-- Hero -->
+      <div class="px-5 py-5">
+        <div class="flex items-start gap-4">
+          <!-- Avatar -->
+          <div
+            class="w-12 h-12 rounded-[11px] bg-teal-50 border border-teal-200/60 shrink-0 flex items-center justify-center text-[#0f766e] font-semibold text-[15px] tracking-tight font-mono"
+          >
+            {{ application.firstName?.charAt(0)?.toUpperCase() }}{{ application.lastName?.charAt(0)?.toUpperCase() }}
+          </div>
+
+          <!-- Meta -->
+          <div class="flex-1 min-w-0 pt-0.5">
+            <div class="flex items-start justify-between gap-3 mb-1.5">
+              <h2 class="text-[17px] font-semibold text-slate-900 leading-snug">
+                {{ application.firstName }} {{ application.lastName }}
+              </h2>
+              <!-- Status pill -->
+              <span
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10.5px] font-semibold shrink-0 mt-0.5
+                [&[data-status='PENDING']]:bg-amber-50 [&[data-status='PENDING']]:text-amber-700 [&[data-status='PENDING']]:border [&[data-status='PENDING']]:border-amber-200/70
+                [&[data-status='ANALYZING']]:bg-violet-50 [&[data-status='ANALYZING']]:text-violet-700 [&[data-status='ANALYZING']]:border [&[data-status='ANALYZING']]:border-violet-200/70
+                [&[data-status='ANALYZED']]:bg-teal-50 [&[data-status='ANALYZED']]:text-teal-700 [&[data-status='ANALYZED']]:border [&[data-status='ANALYZED']]:border-teal-200/70
+                [&[data-status='REVIEWED']]:bg-blue-50 [&[data-status='REVIEWED']]:text-blue-700 [&[data-status='REVIEWED']]:border [&[data-status='REVIEWED']]:border-blue-200/70
+                [&[data-status='ACCEPTED']]:bg-emerald-50 [&[data-status='ACCEPTED']]:text-emerald-700 [&[data-status='ACCEPTED']]:border [&[data-status='ACCEPTED']]:border-emerald-200/70
+                [&[data-status='REFUSED']]:bg-rose-50 [&[data-status='REFUSED']]:text-rose-600 [&[data-status='REFUSED']]:border [&[data-status='REFUSED']]:border-rose-200/70
+                bg-slate-100 text-slate-500 border border-slate-200/70"
+                [attr.data-status]="application.status"
+              >
+              <span
+                class="w-[5px] h-[5px] rounded-full shrink-0
+                  [&[data-status='PENDING']]:bg-amber-500
+                  [&[data-status='ANALYZING']]:bg-violet-500
+                  [&[data-status='ANALYZED']]:bg-teal-500
+                  [&[data-status='REVIEWED']]:bg-blue-500
+                  [&[data-status='ACCEPTED']]:bg-emerald-500
+                  [&[data-status='REFUSED']]:bg-rose-500
+                  bg-slate-400"
+                [attr.data-status]="application.status"
+              ></span>
+                {{ application.status | titlecase }}
+            </span>
+            </div>
+            <p class="text-[12px] text-slate-400 flex items-center gap-1.5">
+              <i class="fa-regular fa-calendar text-[10px]"></i>
+              Applied {{ application.createdAt | date:'MMMM d, yyyy' }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div class="px-5 py-4">
+        <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+          <i class="fa-regular fa-address-card text-[10px]"></i>
+          Contact
+        </p>
+        <div class="grid grid-cols-2 rounded-lg overflow-hidden border border-slate-200/70">
+          <div class="px-3.5 py-3 border-r border-slate-200/70">
+            <p class="text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1">Email</p>
+            <p class="text-[12.5px] font-medium text-slate-800 truncate" [title]="application.email">
+              {{ application.email }}
+            </p>
+          </div>
+          <div class="px-3.5 py-3">
+            <p class="text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1">Phone</p>
+            <p class="text-[12.5px] font-medium text-slate-800">{{ application.phone || '—' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Match Score -->
+      <div class="px-5 py-4">
+        <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+          <i class="fa-solid fa-wand-magic-sparkles text-[#0f766e] text-[10px]"></i>
+          AI Match Score
+        </p>
+        <div class="flex items-center justify-between mb-2.5">
+          <!-- Score -->
+          <div class="flex items-baseline gap-1">
+          <span
+            class="text-[30px] font-semibold leading-none font-mono tabular-nums"
+            [ngClass]="{
+              'text-rose-500':   application.llmScore < 50,
+              'text-amber-500':  application.llmScore >= 50 && application.llmScore < 75,
+              'text-[#0f766e]':  application.llmScore >= 75
+            }"
+          >{{ application.llmScore }}</span>
+            <span class="text-[14px] font-normal text-slate-400">%</span>
+          </div>
+          <!-- Tag + sub -->
+          <div class="text-right">
+          <span
+            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10.5px] font-semibold mb-1"
+            [ngClass]="{
+              'bg-rose-50 text-rose-600 border border-rose-200/70':                         application.llmScore < 50,
+              'bg-amber-50 text-amber-600 border border-amber-200/70':                      application.llmScore >= 50 && application.llmScore < 75,
+              'bg-teal-50 text-teal-700 border border-teal-200/70':                         application.llmScore >= 75
+            }"
+          >
+            <i
+              class="fa-solid text-[9px]"
+              [ngClass]="{
+                'fa-arrow-down': application.llmScore < 50,
+                'fa-minus':      application.llmScore >= 50 && application.llmScore < 75,
+                'fa-arrow-up':   application.llmScore >= 75
+              }"
+            ></i>
+            <span *ngIf="application.llmScore >= 75">Strong match</span>
+            <span *ngIf="application.llmScore >= 50 && application.llmScore < 75">Moderate match</span>
+            <span *ngIf="application.llmScore < 50">Weak match</span>
+          </span>
+          </div>
+        </div>
+        <!-- Track -->
+        <div class="h-[3px] w-full bg-slate-100 rounded-full overflow-hidden">
+          <div
+            class="h-full rounded-full transition-all duration-700 ease-out"
+            [style.width.%]="application.llmScore"
+            [ngClass]="{
+            'bg-rose-400':   application.llmScore < 50,
+            'bg-amber-400':  application.llmScore >= 50 && application.llmScore < 75,
+            'bg-[#0f766e]':  application.llmScore >= 75
+          }"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Analysis Summary -->
+      <div class="px-5 py-4">
+        <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+          <i class="fa-regular fa-file-lines text-[11px]"></i>
+          Analysis Summary
+        </p>
+        <p class="text-[13px] text-slate-500 leading-relaxed whitespace-pre-line">
+          {{ application.llmAnalysis }}
+        </p>
+      </div>
+
+      <!-- Resume / CV -->
+      <div class="px-5 py-4">
+        <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+          <i class="fa-solid fa-paperclip text-[10px]"></i>
+          Resume / CV
+        </p>
+        <div class="flex items-center gap-3 px-3.5 py-3 rounded-lg border border-slate-200/70 bg-slate-50/50">
+          <div class="w-9 h-9 rounded-lg bg-white border border-slate-200/70 flex items-center justify-center shrink-0">
+            <i class="fa-regular fa-file-pdf text-rose-400 text-[15px]"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-[12.5px] font-medium text-slate-700 truncate">Candidate CV</p>
+            <p class="text-[11px] text-slate-400">PDF · Submitted {{ application.createdAt | date:'MMM d, yyyy' }}</p>
+          </div>
+          <button
+            (click)="downloadCv(application.id)"
+            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-slate-200 bg-white text-[12px] font-semibold text-slate-600 hover:border-[#0f766e] hover:text-[#0f766e] hover:bg-teal-50/60 active:scale-[0.97] transition-all duration-150 cursor-pointer shrink-0"
+          >
+            <i class="fa-solid fa-download text-[10px]"></i>
+            Download
+          </button>
+        </div>
+      </div>
+
+      <!-- Status + Notifications -->
+      <div class="px-5 py-4">
+
+        <!-- Update Status -->
+        <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-3">
+          Update Status
+        </p>
+        <div class="flex flex-wrap gap-2 mb-5">
+          <button
+            (click)="updateStatus(selectedApplicantId!, ApplicationStatus.REVIEWED)"
+            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-slate-200 bg-white text-[12px] font-semibold text-slate-600 hover:bg-slate-50 hover:border-slate-300 active:scale-[0.97] transition-all cursor-pointer"
+          >
+            <i class="fa-regular fa-eye text-[11px]"></i>
+            Mark Reviewed
+          </button>
+          <button
+            (click)="updateStatus(selectedApplicantId!, ApplicationStatus.ACCEPTED)"
+            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-emerald-200/80 bg-emerald-50 text-[12px] font-semibold text-emerald-700 hover:bg-emerald-100/70 active:scale-[0.97] transition-all cursor-pointer"
+          >
+            <i class="fa-solid fa-check text-[11px]"></i>
+            Accept
+          </button>
+          <button
+            (click)="updateStatus(selectedApplicantId!, ApplicationStatus.REFUSED)"
+            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-rose-200/80 bg-rose-50 text-[12px] font-semibold text-rose-600 hover:bg-rose-100/70 active:scale-[0.97] transition-all cursor-pointer"
+          >
+            <i class="fa-solid fa-xmark text-[11px]"></i>
+            Refuse
+          </button>
+        </div>
+
+        <!-- Send Notification -->
+        <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-3">
+          Send Notification
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <button
+            (click)="sendOneAcceptanceEmail(application.id)"
+            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#0f766e] text-[12px] font-semibold text-white hover:bg-[#0d6460] active:scale-[0.97] transition-all cursor-pointer shadow-sm shadow-teal-900/10"
+          >
+            <i class="fa-regular fa-envelope text-[11px]"></i>
+            Send Acceptance
+          </button>
+          <button
+            (click)="sendOneRefusalEmail(application.id)"
+            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-slate-200 bg-white text-[12px] font-semibold text-slate-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200/80 active:scale-[0.97] transition-all cursor-pointer"
+          >
+            <i class="fa-regular fa-envelope text-[11px]"></i>
+            Send Refusal
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </aside>
+</div>
+<div
+  *ngIf="toastMessage"
+  class="fixed bottom-6 right-110 z-50 animate-[fadeIn_0.3s_ease-out]"
+>
+  <div
+    class="flex items-center gap-3 px-5 py-4 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] text-[13.5px] font-medium border"
+    [ngClass]="{
+      'bg-white text-emerald-700 border-emerald-200': toastType === 'success',
+      'bg-white text-rose-700 border-rose-200': toastType === 'error',
+      'bg-slate-900 text-white border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.2)]': toastType === 'info'
+    }"
+  >
+    <i *ngIf="toastType === 'success'" class="fa-solid fa-circle-check text-emerald-500 text-[18px]"></i>
+    <i *ngIf="toastType === 'error'" class="fa-solid fa-circle-xmark text-rose-500 text-[18px]"></i>
+    <i *ngIf="toastType === 'info'" class="fa-solid fa-circle-notch fa-spin text-slate-300 text-[18px]"></i>
+    <span class="tracking-wide">{{ toastMessage }}</span>
+  </div>
+</div>
+<div *ngIf="showDeleteModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-xl w-full max-w-md shadow-xl relative animate-[fadeIn_0.2s_ease-out] flex flex-col overflow-hidden">
+    <div class="p-6 sm:p-8 text-center">
+      <div class="w-14 h-14 rounded-full bg-red-50 border-4 border-white shadow-[0_0_0_1px_rgba(239,68,68,0.2)] flex items-center justify-center mx-auto mb-4 text-red-500">
+        <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+      </div>
+      <h2 class="text-xl font-bold text-slate-900 mb-2">Delete Applicant Listing?</h2>
+      <p class="text-sm text-slate-500 leading-relaxed">
+        Are you sure you want to delete this application? This action cannot be undone.
+      </p>
+    </div>
+    <div class="px-6 py-4 border-t border-slate-100 bg-slate-50 flex justify-center gap-3 sm:justify-end">
+      <button (click)="showDeleteModal = false" class="px-5 py-2.5 rounded-lg border border-slate-300 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors cursor-pointer shadow-sm w-full sm:w-auto">
+        Cancel
+      </button>
+      <button [disabled]="deleting" (click)="deleteApplication()" class="px-5 py-2.5 rounded-lg border border-transparent bg-red-600 text-white text-sm font-medium hover:bg-red-700 transition-colors cursor-pointer shadow-sm flex items-center justify-center gap-2 w-full sm:w-auto">
+        <span *ngIf="!deleting">Yes, Delete Job</span>
+        <span *ngIf="deleting">Deleting...</span>
+      </button>
+    </div>
+  </div>
+</div>
