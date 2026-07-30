@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteTargetsManager">
+    <targets>
+      <target name="admin-service" type="docker-compose" uuid="ecc777f7-7e4a-4aa2-ac8a-b0c691457dac">
+        <config>
+          <option name="targetPlatform">
+            <TargetPlatform />
+          </option>
+          <option name="configurationFiles">
+            <list>
+              <option value="C:\Users\WSI\Documents\3LM\DevWeb (Spring Boot)\Projects\IntelligentRecruitment-app\IntelligentRecruitment_microservice\docker-compose.yml" />
+            </list>
+          </option>
+          <option name="serviceName" value="admin-service" />
+        </config>
+        <ContributedStateBase type="JavaLanguageRuntime">
+          <config>
+            <option name="homePath" value="/opt/java/openjdk" />
+            <option name="javaVersionString" value="17.0.18" />
+          </config>
+        </ContributedStateBase>
+      </target>
+    </targets>
+  </component>
+</project>

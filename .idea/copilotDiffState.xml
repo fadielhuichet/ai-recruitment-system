@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/IntelligentRecruitment-UI/src/app/Pages/Admin/applications/applications.ts">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/IntelligentRecruitment-UI/src/app/Pages/Admin/applications/applications.ts" />
+              <option name="originalContent" value="import { Component } from '@angular/core';&#10;&#10;@Component({&#10;  selector: 'app-applications',&#10;  imports: [],&#10;  templateUrl: './applications.html',&#10;  styleUrl: './applications.css',&#10;})&#10;export class Applications {}&#10;" />
+              <option name="updatedContent" value="import {Component, OnDestroy, OnInit} from '@angular/core';&#10;import {CommonModule} from '@angular/common';&#10;import {Observable, Subscription, catchError, finalize, of} from 'rxjs';&#10;import {ApplicationService} from '../../../services/services/Application-service/application-service';&#10;import {PagedResponse} from '../../../models/Dto/PagedResponse';&#10;import {ApplicationResponse} from '../../../models/Dto/Application/ApplicationResponse';&#10;import {AdminApplicationStatsResponse} from '../../../models/Dto/Application/AdminApplicationStatsResponse';&#10;import {ApplicationStatus} from '../../../models/Enum/ApplicationStatus';&#10;&#10;@Component({&#10;  selector: 'app-applications',&#10;  standalone: true,&#10;  imports: [CommonModule],&#10;  templateUrl: './applications.html',&#10;  styleUrl: './applications.css',&#10;})&#10;export class Applications implements OnInit, OnDestroy {&#10;  applicationsResponse: PagedResponse&lt;ApplicationResponse&gt; | null = null;&#10;  stats$!: Observable&lt;AdminApplicationStatsResponse&gt;;&#10;  loading = true;&#10;&#10;  page = 0;&#10;  size = 10;&#10;&#10;  private readonly subscriptions = new Subscription();&#10;&#10;  constructor(private applicationService: ApplicationService) {}&#10;&#10;  ngOnInit() {&#10;    this.applicationsResponse = this.buildEmptyResponse();&#10;    this.stats$ = this.applicationService.getAdminApplicationStats();&#10;    this.fetchApplications();&#10;  }&#10;&#10;  ngOnDestroy() {&#10;    this.subscriptions.unsubscribe();&#10;  }&#10;&#10;  changePage(newPage: number) {&#10;    this.page = newPage;&#10;    this.fetchApplications();&#10;  }&#10;&#10;  downloadCv(cvFilePath?: string | null) {&#10;    if (!cvFilePath) {&#10;      return;&#10;    }&#10;&#10;    window.open(cvFilePath, '_blank');&#10;  }&#10;&#10;  protected readonly ApplicationStatus = ApplicationStatus;&#10;&#10;  private fetchApplications() {&#10;    this.loading = true;&#10;    const sub = this.applicationService&#10;      .getAdminApplications(this.page, this.size)&#10;      .pipe(&#10;        catchError(() =&gt; of(this.buildEmptyResponse())),&#10;        finalize(() =&gt; {&#10;          this.loading = false;&#10;        })&#10;      )&#10;      .subscribe(response =&gt; {&#10;        this.applicationsResponse = response;&#10;      });&#10;&#10;    this.subscriptions.add(sub);&#10;  }&#10;&#10;  private buildEmptyResponse(): PagedResponse&lt;ApplicationResponse&gt; {&#10;    return {&#10;      content: [],&#10;      totalElements: 0,&#10;      totalPages: 1,&#10;      number: this.page,&#10;      size: this.size,&#10;      first: this.page === 0,&#10;      last: true,&#10;    };&#10;  }&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

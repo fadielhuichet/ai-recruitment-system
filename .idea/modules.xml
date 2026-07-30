@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/IntelligentRecruitment-UI/IntelligentRecruitment-UI.iml" filepath="$PROJECT_DIR$/IntelligentRecruitment-UI/IntelligentRecruitment-UI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/IntelligentRecruitment-app.iml" filepath="$PROJECT_DIR$/.idea/IntelligentRecruitment-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/IntelligentRecruitment_microservice/application-service/application-service.iml" filepath="$PROJECT_DIR$/IntelligentRecruitment_microservice/application-service/application-service.iml" />
+    </modules>
+  </component>
+</project>

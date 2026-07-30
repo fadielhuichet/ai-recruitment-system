@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/IntelligentRecruitment_microservice/admin-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/IntelligentRecruitment_microservice/application-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/IntelligentRecruitment_microservice/authentication-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/IntelligentRecruitment_microservice/candidate-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/IntelligentRecruitment_microservice/config-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/IntelligentRecruitment_microservice/discovery-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/IntelligentRecruitment_microservice/gateway-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/IntelligentRecruitment_microservice/infrastructure/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/IntelligentRecruitment_microservice/job-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/IntelligentRecruitment_microservice/recruiter-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/IntelligentRecruitment_microservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/IntelligentRecruitment_microservice/src/main/resources" charset="UTF-8" />
+    <file url="file://$USER_HOME$/Downloads/Verified-Pro.pages" charset="ISO-8859-1" />
+  </component>
+</project>

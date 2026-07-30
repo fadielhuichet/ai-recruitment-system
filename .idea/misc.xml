@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/IntelligentRecruitment_microservice/pom.xml" />
+        <option value="$PROJECT_DIR$/IntelligentRecruitment_microservice/admin-service/pom.xml" />
+        <option value="$PROJECT_DIR$/IntelligentRecruitment_microservice/application-service/pom.xml" />
+        <option value="$PROJECT_DIR$/IntelligentRecruitment_microservice/authentication-service/pom.xml" />
+        <option value="$PROJECT_DIR$/IntelligentRecruitment_microservice/config-server/pom.xml" />
+        <option value="$PROJECT_DIR$/IntelligentRecruitment_microservice/discovery-service/pom.xml" />
+        <option value="$PROJECT_DIR$/IntelligentRecruitment_microservice/gateway-service/pom.xml" />
+        <option value="$PROJECT_DIR$/IntelligentRecruitment_microservice/job-service/pom.xml" />
+        <option value="$PROJECT_DIR$/IntelligentRecruitment_microservice/recruiter-service/pom.xml" />
+        <option value="$PROJECT_DIR$/IntelligentRecruitment_microservice/candidate-service/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_24" default="true" project-jdk-name="24" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>
