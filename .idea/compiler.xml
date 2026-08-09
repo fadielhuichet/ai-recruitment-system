@@ -13,16 +13,6 @@
         <module name="admin-service" />
         <module name="discovery-service" />
       </profile>
-      <profile name="Annotation profile for recruiter-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
-        </processorPath>
-        <module name="job-service" />
-        <module name="recruiter-service" />
-      </profile>
       <profile name="Annotation profile for candidate-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -32,14 +22,15 @@
         </processorPath>
         <module name="candidate-service" />
       </profile>
-      <profile name="Annotation profile for authentication-service" enabled="true">
+      <profile name="Annotation profile for IntelligentRecruitment_microservice" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
         </processorPath>
+        <module name="job-service" />
+        <module name="recruiter-service" />
         <module name="authentication-service" />
       </profile>
     </annotationProcessing>
