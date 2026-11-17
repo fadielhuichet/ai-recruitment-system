@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.fedicode</groupId>
     <artifactId>IntelligentRecruitment_microservice</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>IntelligentRecruitment_microservice</name>
     <description>IntelligentRecruitment_microservice</description>
@@ -23,6 +23,15 @@
     </developers>
     <modules>
         <module>infrastructure</module>
+        <module>admin-service</module>
+        <module>recruiter-service</module>
+        <module>candidate-service</module>
+        <module>job-service</module>
+        <module>gateway-service</module>
+        <module>application-service</module>
+        <module>config-server</module>
+        <module>discovery-service</module>
+        <module>authentication-service</module>
     </modules>
     <scm>
         <connection/>
